@@ -1,0 +1,249 @@
+.. _nuts-node-monitoring:
+
+Monitoring
+##########
+
+Health checks
+*************
+
+Status
+======
+
+The status endpoint check that the service has been started. It can be used as a ``readiness probe``.
+It does not provide any information on the individual modules running as part of the executable.
+The main goal of the service is to give a YES/NO answer for if the service is running:
+
+.. code-block:: text
+
+    GET /status
+
+Returns an "OK" response body with status code ``200``.
+
+.. note::
+
+    The provided Docker containers are configured to perform this healthcheck out of the box.
+    However, if the internal endpoints port (:8081) has been changed, the healthcheck will fail and Docker will mark the container as unhealthy.
+    Override the default healthcheck to solve this.
+
+Health
+======
+
+The health endpoint provides more fine grained health checks on the Nuts node. It can be used as a ``liveness probe``.
+It reports in a format compatible with `Spring Boot's Health Actuator <https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/#health>`__.
+The endpoint is available over HTTP:
+
+.. code-block:: text
+
+    GET /health
+
+Each component in the health check can have one of the statuses ``UP``, ``UNKNOWN``, or ``DOWN``.
+The overall status is determined by the lowest common denominator, so if one components is ``DOWN``, the overall system status is ``DOWN``.
+The overall system statuses ``UP`` and ``UNKNOWN`` map to HTTP status code ``200``, and status ``DOWN`` maps to status code ``503``.
+
+Example response when all checks succeeded (formatted for readability):
+
+.. code-block:: json
+
+    {
+      "status": "UP",
+      "details": {
+        "crypto.filesystem": {
+          "status": "UP"
+        },
+        "network.auth_config": {
+          "status": "UP",
+          "details": "no node DID"
+        },
+        "network.tls": {
+          "status": "UP"
+        }
+      }
+    }
+
+Example response when one or more checks failed:
+
+.. code-block:: json
+
+    {
+      "status": "DOWN",
+      "details": {
+        "network.tls": {
+          "status": "DOWN",
+          "details": "x509: certificate signed by unknown authority"
+        }
+      }
+    }
+
+
+Basic diagnostics
+*****************
+
+.. code-block:: text
+
+    GET /status/diagnostics
+
+.. note::
+
+    this page is intended to be read by humans, not machines.
+    all but the ``status`` entry are related to V5 functionality (gRPC network, VDRv1 and VCRv1 APIs).
+
+Returns the status of the various services in ``yaml`` format:
+
+.. code-block:: text
+
+    network:
+        connections:
+            connected_peers:
+                - id: d38c6df5-63d2-4b2c-87f4-2e8bbfa5612f
+                  address: nuts.nl:5555
+                  nodedid: did:nuts:abc123
+            connected_peers_count: 1
+        state:
+            dag_xor: 6aada4464e380db16d0316e597956fcdaeada0e8f6023be82eeb9c798e1815c6
+            stored_database_size_bytes: 106496005
+            transaction_count: 9001
+    vcr:
+        credential_count: 7
+        issuer:
+            issued_credentials_count: 0
+            revoked_credentials_count: 0
+        verifier:
+            revocations_count: 18
+    vdr:
+        did_documents_count: 5
+        conflicted_did_documents:
+            total_count: 2
+            owned_count: 0
+    status:
+        git_commit: d36837bae48b780bfb76134e85b506472fc207a6
+        os_arch: linux/amd64
+        software_version: master
+        uptime: 4h14m12s
+
+If you supply ``application/json`` for the ``Accept`` HTTP header it will return the diagnostics in JSON format.
+
+Explanation of ambiguous/complex entries in the diagnostics:
+
+* ``vcr.credential_count`` holds the total number of credentials known to the node (public VCs, and private VCs issued to a DID on the local node)
+* ``vcr.issuer.issued_credentials_count`` holds the total number of credentials issued by the local node
+* ``vcr.issuer.revoked_credentials_count`` holds the total number of revoked credentials issued by the local node
+* ``vcr.verifier.revocations_count`` holds the total number of revoked credentials (public and private VCs)
+* ``vdr.conflicted_did_documents.total_count`` holds the total number of DID documents that are conflicted (have parallel updates). This may indicate a stolen private key
+* ``vdr.conflicted_did_documents.owned_count`` holds the number of conflicted DID documents you control as a node owner
+
+Note: the ``network`` and ``vdr`` entries only apply to ``did:nuts``.
+
+Metrics
+*******
+
+The Nuts service executable has build-in support for **Prometheus**. Prometheus is a time-series database which supports a wide variety of services. It also allows for exporting metrics to different visualization solutions like **Grafana**. See https://prometheus.io/ for more information on how to run Prometheus. The metrics are exposed at ``/metrics``
+
+Configuration
+=============
+
+In order for metrics to be gathered by Prometheus. A ``job`` has to be added to the ``prometheus.yml`` configuration file.
+Below is a minimal configuration file that will only gather Nuts metrics:
+
+.. code-block:: yaml
+
+    # my global config
+    global:
+      scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+      evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+      # scrape_timeout is set to the global default (10s).
+
+    # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+    rule_files:
+    # - "first_rules.yml"
+    # - "second_rules.yml"
+
+    # A scrape configuration containing exactly one endpoint to scrape:
+    scrape_configs:
+      # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+      - job_name: 'nuts'
+        metrics_path: '/metrics'
+        scrape_interval: 5s
+        static_configs:
+          - targets: ['127.0.0.1:8081']
+
+It's important to enter the correct IP/domain and port where the Nuts node can be found!
+
+Exported metrics
+================
+
+The Nuts service executable exports the following metric namespaces:
+
+* ``nuts_`` contains metrics related to the functioning of the Nuts node
+* ``process_`` contains OS metrics related to the process
+* ``go_`` contains Go metrics related to the process
+* ``promhttp_`` contains metrics related to HTTP calls to the Nuts node's ``/metrics`` endpoint
+
+Tracing
+*******
+
+The Nuts node supports distributed tracing via OpenTelemetry. When enabled, it exports traces to an OTLP-compatible backend
+(e.g., Jaeger, Zipkin, .NET Aspire Dashboard, Grafana Tempo).
+
+Configuration
+=============
+
+Enable tracing by configuring the OTLP endpoint:
+
+.. code-block:: yaml
+
+    tracing:
+      endpoint: localhost:4318
+
+Or via environment variables:
+
+.. code-block:: shell
+
+    NUTS_TRACING_ENDPOINT=localhost:4318
+
+Configuration options:
+
+* ``tracing.endpoint`` - OTLP HTTP endpoint (e.g., ``localhost:4318``). Tracing is disabled when empty.
+* ``tracing.insecure`` - Disable TLS for the OTLP connection (default: ``false``). Only use in trusted networks or development environments, as trace data may contain sensitive information.
+* ``tracing.servicename`` - Service name reported to the tracing backend (default: ``nuts-node``). Useful for distinguishing multiple instances in distributed tracing.
+
+What is traced
+==============
+
+The following are automatically instrumented:
+
+* **Inbound HTTP requests** - All API calls to the Nuts node create spans (except ``/health``, ``/metrics``, ``/status``)
+* **Outbound HTTP requests** - HTTP calls to external services (e.g., fetching DID documents, OAuth flows)
+* **SQL database** - Database queries via GORM
+* **Hashicorp Vault** - Key storage operations when using Vault backend
+* **Log correlation** - Log entries include ``trace_id`` and ``span_id`` fields when tracing is enabled
+* **OTLP log export** - Logs are also exported to the OTLP backend for unified observability
+
+Trace context propagation
+=========================
+
+The Nuts node uses W3C Trace Context (``traceparent`` header) for propagating trace context across service boundaries.
+When calling the Nuts node from another traced service, include the ``traceparent`` header to link spans.
+
+Known limitations
+=================
+
+The following components are not yet instrumented:
+
+* **Azure Key Vault** - Azure managed keys backend is not instrumented. The Azure SDK supports OpenTelemetry via the ``azotel`` package (see `Azure SDK tracing <https://github.com/Azure/azure-sdk-for-go/tree/main/sdk/tracing/azotel>`_).
+* **gRPC network layer** - P2P communication between nodes (``did:nuts``) does not include tracing as it's for v5 and deprecated
+
+These limitations may be addressed in future releases.
+
+CPU profiling
+*************
+
+It's possible to enable CPU profiling by passing the ``--cpuprofile=/some/location.dmp`` option.
+This will write a CPU profile to the given location when the node shuts down.
+The resulting file can be analyzed with Go tooling:
+
+.. code-block:: shell
+
+    go tool pprof /some/location.dmp
+
+The tooling includes a help function to get you started. To get started use the ``web`` command inside the tooling.
+It'll open a SVG in a browser and give an overview of what the node was doing.

@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logging &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Monitoring" href="monitoring.html" />
+    <link rel="prev" title="Verifiable Credentials" href="verifiable-credentials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Logging</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/logging.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="logging">
+<span id="nuts-node-logging"></span><h1>Logging<a class="headerlink" href="#logging" title="Link to this heading"></a></h1>
+<p>The Nuts Node writes its logs to standard out.
+By default it logs in text format, but it can be configured to log in JSON format.
+This is especially useful when using log collection tools (e.g. <a class="reference external" href="https://www.fluentd.org/">fluentd</a>) and recommended for production environments.</p>
+<p>To enable JSON logging, set the <code class="docutils literal notranslate"><span class="pre">loggerformat</span></code> to <code class="docutils literal notranslate"><span class="pre">json</span></code> in the configuration file.
+Example logs message in JSON format:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"did"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:AmEcvjhiGxxkiByWyrN7VTapk9cXaUU8UozwWqJC7VKY"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VDR"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DID document registered"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-01-14T07:34:16+01:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"txRef"</span><span class="p">:</span><span class="w"> </span><span class="s2">"052a8ef99f1f641ea47cc15ca5a5c7b68028ebbf886b07898937d4303e3ea9cb"</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following fields are always available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">module</span></code>: the module that logged the message, e.g. <code class="docutils literal notranslate"><span class="pre">VDR</span></code> or <cite>Auth`</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">level</span></code>: the level of the log message, e.g. <code class="docutils literal notranslate"><span class="pre">info</span></code> or <code class="docutils literal notranslate"><span class="pre">error</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time</span></code>: the timestamp of the log message, e.g. <code class="docutils literal notranslate"><span class="pre">2023-01-14T07:34:16+01:00</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">msg</span></code>: the actual log message</p></li>
+</ul>
+<p>Operations that manipulate or use private keys directly will generate a log with <code class="docutils literal notranslate"><span class="pre">level</span></code> set to <code class="docutils literal notranslate"><span class="pre">audit</span></code>.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="verifiable-credentials.html" class="btn btn-neutral float-left" title="Verifiable Credentials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="monitoring.html" class="btn btn-neutral float-right" title="Monitoring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

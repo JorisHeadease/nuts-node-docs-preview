@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supported Protocols and Formats &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Version Incompatibilities" href="version-incompatibilities.html" />
+    <link rel="prev" title="Issuing and searching Verifiable Credentials" href="vc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Supported Protocols and Formats</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cryptographic-algorithms">Cryptographic Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#did-methods">DID methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#credentials">Credentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diip-compliance">DIIP Compliance</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Supported Protocols and Formats</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/integrating/supported-protocols-formats.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="supported-protocols-and-formats">
+<span id="id1"></span><h1>Supported Protocols and Formats<a class="headerlink" href="#supported-protocols-and-formats" title="Link to this heading"></a></h1>
+<p>This page documents which cryptographic algorithms, key types and SSI formats and protocols are supported.
+Various protocols have a draft status and success on using them may vary.</p>
+<section id="cryptographic-algorithms">
+<h2>Cryptographic Algorithms<a class="headerlink" href="#cryptographic-algorithms" title="Link to this heading"></a></h2>
+<p>The following cryptographic signing algorithms are supported:</p>
+<ul class="simple">
+<li><p>ECDSA with the NIST P-256, P-384 and P-512 curves.</p></li>
+<li><p>EdDSA with Ed25519 curves.</p></li>
+<li><p>RSASSA-PSS RSA with keys of at least 2048 bits.</p></li>
+</ul>
+<p>The following encryption algorithms are supported:</p>
+<ul class="simple">
+<li><p>RSA-OAEP-SHA256 (min. 2048 bits)</p></li>
+<li><p>ECDH-ES+A256KW</p></li>
+<li><p>AES-GCM-256</p></li>
+</ul>
+</section>
+<section id="did-methods">
+<h2>DID methods<a class="headerlink" href="#did-methods" title="Link to this heading"></a></h2>
+<p>The following DID methods are supported:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> (creating and resolving)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">did:web</span></code> (creating and resolving)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">did:key</span></code> (resolving)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">did:jwk</span></code> (resolving)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">did:x509</span></code> (resolving, except the “eku” policy type, additionally the “san” “otherName” policy)</p></li>
+</ul>
+</section>
+<section id="credentials">
+<h2>Credentials<a class="headerlink" href="#credentials" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://www.w3.org/TR/vc-data-model/">W3C Verifiable Credentials v1</a> and Presentations are supported (issuing and verifying) in JSON-LD and JWT format.</p>
+<p>The following protocols are being implemented (work in progress):</p>
+<ul class="simple">
+<li><p>OpenID4VP verifier and SIOPv2 relying party for requesting a presentation from a wallet.</p></li>
+<li><p>OpenID4VCI issuer for issuing a credential to a wallet.</p></li>
+<li><p>OpenID4VCI wallet for receiving a credential from an issuer.</p></li>
+</ul>
+</section>
+<section id="diip-compliance">
+<h2>DIIP Compliance<a class="headerlink" href="#diip-compliance" title="Link to this heading"></a></h2>
+<p>We strive to be complient with the <a class="reference external" href="https://dutchblockchaincoalition.org/bouwstenen/diip-2">DIIP components</a> as specified by the Dutch Blockchain Coalition.
+The following components are supported:</p>
+<ol class="arabic simple">
+<li><p>OpenID for Verifiable Credential Issuance <span class="green">✓</span> (wallet only)</p></li>
+<li><p>OpenID for Verifiable Presentations <span class="green">✓</span></p></li>
+<li><p>SIOP V2 (Not relevant for organisation wallet agents)</p></li>
+<li><p>DIF Presentation Exchange <span class="green">✓</span></p></li>
+<li><p>W3C Verifiable Credential JWT <span class="green">✓</span></p></li>
+<li><p>DID methods: <code class="docutils literal notranslate"><span class="pre">did:web</span></code> and <code class="docutils literal notranslate"><span class="pre">did:jwk</span></code> <span class="green">✓</span></p></li>
+<li><p>Signature types <code class="docutils literal notranslate"><span class="pre">ES256</span></code> <span class="green">✓</span></p></li>
+<li><p>Revocation method: StatusList 2021 <span class="green">✓</span></p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="vc.html" class="btn btn-neutral float-left" title="Issuing and searching Verifiable Credentials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="version-incompatibilities.html" class="btn btn-neutral float-right" title="Version Incompatibilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

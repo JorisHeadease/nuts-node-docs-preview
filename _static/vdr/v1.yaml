@@ -1,0 +1,339 @@
+openapi: "3.0.0"
+info:
+  title: Nuts Verifiable Data Registry API spec
+  description: API specification for the Verifiable Data Registry
+  version: 1.0.0
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+servers:
+  - url: http://localhost:8081
+paths:
+  /internal/vdr/v1/did:
+    post:
+      summary: Creates a new Nuts DID
+      deprecated: true
+      description: |
+        Starting with v6.0.0, the entire body will be ignored and default values will be used.
+        The default values are: selfControl = true, assertionMethod = true, keyAgreement = true, capabilityInvocation = true, capabilityDelegation = true, authentication = true and controllers = [].
+
+        Only a single keypair will be generated. All enabled methods will reuse the same key pair.
+
+        keyAgreement = true can't be overridden through this endpoint. If the configured key store backend can't back a KeyAgreement key (e.g. Azure Key Vault, which doesn't support decryption/ECDH with its EC keys), this operation always fails with a 400. Use the V2 API instead (`POST /internal/vdr/v2/subject`), which lets a caller omit the encryption key request. Don't mix V1 and V2 for creating and managing DIDs/subjects on the same node: switch over to V2 entirely rather than using both.
+
+        error returns:
+        * 400 - Invalid (combination of) options, or the key store backend can't back a requested key usage (e.g. KeyAgreement on Azure Key Vault)
+        * 500 - An error occurred while processing the request
+      operationId: "createDID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DIDCreateRequest'
+      tags:
+        - DID
+      responses:
+        "200":
+          description: "New DID has been created successfully. Returns the DID document."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DIDDocument'
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/vdr/v1/did/{did}:
+    parameters:
+      - name: did
+        in: path
+        description: URL encoded DID.
+        required: true
+        example: did:nuts:EwVMYK2ugaMvRHUbGFBhuyF423JuNQbtpes35eHhkQic
+        schema:
+          type: string
+    get:
+      parameters:
+        - name: versionId
+          in: query
+          description: |
+            If a versionId parameter is provided, the DID resolution algorithm returns a specific version of the DID document.
+            The version is the Sha256 hash of the document.
+            The DID parameters versionId and versionTime are mutually exclusive.
+
+            See [the did resolution spec about versioning](https://w3c-ccg.github.io/did-resolution/#versioning)
+          required: false
+          example: "4960afbdf21280ef248081e6e52317735bbb929a204351291b773c252afeebf4"
+          schema:
+            type: string
+        - name: versionTime
+          in: query
+          description: |
+            If a versionTime parameter is provided, the DID resolution algorithm returns a specific version of the DID document.
+            The DID parameters versionId and versionTime are mutually exclusive.
+
+            See [the did resolution spec about versioning](https://w3c-ccg.github.io/did-resolution/#versioning)
+          required: false
+          example: "2021-11-03T08:25:13Z"
+          schema:
+            type: string
+      summary: "Resolves a Nuts DID document"
+      description: |
+        Resolves a Nuts DID document. It also resolves deactivated documents.
+
+        error returns:
+          * 400 - Returned in case of malformed DID
+          * 404 - Corresponding DID document could not be found
+          * 500 - An error occurred while processing the request
+      operationId: "getDID"
+      tags:
+        - DID
+      responses:
+        "200":
+          description: DID has been found and returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DIDResolutionResult'
+        default:
+          $ref: '../common/error_response.yaml'
+    put:
+      summary: Updates a Nuts DID document.
+      description: |
+        Updates a Nuts DID document.
+
+        error returns:
+          * 400 - DID document could not be updated because the DID param was malformed or the DID document is invalid
+          * 403 - DID document could not be updated because the DID is not managed by this node
+          * 404 - Corresponding DID document could not be found
+          * 409 - DID document could not be updated because the document is deactivated or its controllers are deactivated
+          * 500 - An error occurred while processing the request
+      operationId: "updateDID"
+      tags:
+        - DID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DIDUpdateRequest'
+      responses:
+        "200":
+          description: DID document has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DIDDocument'
+        default:
+          $ref: '../common/error_response.yaml'
+    delete:
+      summary: Deactivates a Nuts DID document according to the specification.
+      description: |
+        Updates a Nuts DID document.
+
+        error returns:
+          * 400 - DID document could not be deleted because the DID param was malformed
+          * 403 - DID document could not be deleted because the DID is not managed by this node
+          * 404 - Corresponding DID document could not be found
+          * 409 - DID document could not be deactivated because the the document was already deactivated
+          * 500 - An error occurred while processing the request
+      operationId: "deactivateDID"
+      tags:
+        - DID
+      responses:
+        "200":
+          description: DID document has been deactivated.
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/vdr/v1/did/conflicted:
+    get:
+      summary: "Retrieve the list of conflicted DID documents"
+      description: |
+        Resolves DID documents with a conflict. It returns both the DID Document and metadata of the DID Document.
+
+        error returns:
+          * 500 - An error occurred while processing the request
+      operationId: "conflictedDIDs"
+      tags:
+        - DID
+      responses:
+        "200":
+          description: List of conflicting DID Documents. Empty list if there are none.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DIDResolutionResult'
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/vdr/v1/did/{did}/verificationmethod:
+    parameters:
+      - name: did
+        in: path
+        description: URL encoded DID.
+        required: true
+        example: did:nuts:EwVMYK2ugaMvRHUbGFBhuyF423JuNQbtpes35eHhkQic
+        schema:
+          type: string
+    post:
+      summary: Creates and adds a new verificationMethod to the DID document.
+      description: |
+        It creates a new private public keypair. The public key is wrapped in verificationMethod. This method is added to the DID Document.
+        
+        By default, the key usage (verificationMethod relationships) is the same as when creating a new DID document.
+        To alter this, provide a body specifying the key usage.
+
+        error returns:
+        * 403 - Verification method could not be added because the DID is not managed by this node
+        * 404 - Corresponding DID document could not be found
+        * 500 - An error occurred while processing the request
+      operationId: addNewVerificationMethod
+      tags:
+        - DID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationMethodRelationship'
+      responses:
+        "200":
+          description: "New verification method has been created and added successfully. Returns the DID document."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationMethod'
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/vdr/v1/did/{did}/verificationmethod/{kid}:
+    parameters:
+      - name: did
+        in: path
+        description: URL encoded DID.
+        required: true
+        example: did:nuts:EwVMYK2ugaMvRHUbGFBhuyF423JuNQbtpes35eHhkQic
+        schema:
+          type: string
+      - name: kid
+        in: path
+        description: URL encoded DID identifying the verification method.
+        required: true
+        example: "did:nuts:EwVMYK2ugaMvRHUbGFBhuyF423JuNQbtpes35eHhkQic#zx1alkbvj2mqxi55WSVYWv_rek0uNO2iTZaqTTULpCE"
+        schema:
+          type: string
+    delete:
+      summary: Delete a specific verification method
+      description: |
+        Removes the verification method from the DID Document.
+        Revokes the public key with the corresponding key-id.
+        Note: Other verification methods with different key-ids with the same private key will still be valid.
+
+        error returns:
+        * 403 - Verification method could not be deleted because the DID is not managed by this node
+        * 404 - Corresponding DID document or verification method could not be found
+        * 500 - An error occurred while processing the request
+      tags:
+        - DID
+      operationId: deleteVerificationMethod
+      responses:
+        "204":
+          description: Verification Method was successfully deleted
+        default:
+          $ref: '../common/error_response.yaml'
+components:
+  schemas:
+    DIDDocument:
+      $ref: '../common/ssi_types.yaml#/components/schemas/DIDDocument'
+    DIDDocumentMetadata:
+      $ref: '../common/ssi_types.yaml#/components/schemas/DIDDocumentMetadata'
+    VerificationMethod:
+      $ref: '../common/ssi_types.yaml#/components/schemas/VerificationMethod'
+
+    DIDResolutionResult:
+      required:
+        - document
+        - documentMetadata
+      properties:
+        document:
+          $ref: '#/components/schemas/DIDDocument'
+        documentMetadata:
+          $ref: '#/components/schemas/DIDDocumentMetadata'
+    DIDUpdateRequest:
+      required:
+        - document
+        - currentHash
+      properties:
+        document:
+          $ref: '#/components/schemas/DIDDocument'
+        currentHash:
+          type: string
+          description: The hash of the document in hex format. No longer used, contents ignored.
+          deprecated: true
+    DIDCreateRequest:
+      properties:
+        assertionMethod:
+          type: boolean
+          description: indicates if the generated key pair can be used for assertions.
+          default: true
+        authentication:
+          type: boolean
+          description: indicates if the generated key pair can be used for authentication.
+          default: true
+        capabilityInvocation:
+          type: boolean
+          description: |
+            indicates if the generated key pair can be used for altering DID Documents.
+            In combination with selfControl = true, the key can be used to alter the new DID Document.
+            Defaults to true when not given.
+            default: true
+        capabilityDelegation:
+          type: boolean
+          description: indicates if the generated key pair can be used for capability delegations.
+          default: true
+        keyAgreement:
+          type: boolean
+          description: indicates if the generated key pair can be used for Key agreements.
+          default: true
+        selfControl:
+          type: boolean
+          description: whether the generated DID Document can be altered with its own capabilityInvocation key.
+          default: true
+        controllers:
+          type: array
+          items:
+            type: string
+          description: |
+            List of DID controllers. The DID controllers are the entities that can alter the DID Document.
+            default: []
+    VerificationMethodRelationship:
+      properties:
+        assertionMethod:
+          type: boolean
+          description: indicates if the generated key pair can be used for assertions.
+          default: true
+        authentication:
+          type: boolean
+          description: indicates if the generated key pair can be used for authentication.
+          default: false
+        capabilityInvocation:
+          type: boolean
+          description: |
+            indicates if the generated key pair can be used for altering DID Documents.
+            In combination with selfControl = true, the key can be used to alter the new DID Document.
+            Defaults to true when not given.
+            default: true
+        capabilityDelegation:
+          type: boolean
+          description: indicates if the generated key pair can be used for capability delegations.
+          default: true
+        keyAgreement:
+          type: boolean
+          description: indicates if the generated key pair can be used for Key agreements.
+          default: true
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - {}
+  - jwtBearerAuth: []

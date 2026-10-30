@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificates &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Running on Docker" href="docker.html" />
+    <link rel="prev" title="Clustering" href="clustering.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Certificates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#client-authentication">client authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#did-x509">did:x509</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Certificates</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/certificates.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="certificates">
+<span id="id1"></span><h1>Certificates<a class="headerlink" href="#certificates" title="Link to this heading"></a></h1>
+<section id="client-authentication">
+<h2>client authentication<a class="headerlink" href="#client-authentication" title="Link to this heading"></a></h2>
+<p>Nuts-node versions before v6 only use TLS certificates for client authentication on the <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> endpoints and in the <code class="docutils literal notranslate"><span class="pre">gRPC</span> <span class="pre">Nuts</span> <span class="pre">network</span></code>.
+The Nuts-node also validates the client certificates used by its peers on the <code class="docutils literal notranslate"><span class="pre">gRPC</span> <span class="pre">network</span></code> when a new connection is established, and periodically after that as long as the connection exists.
+To do this, all trusted certificate chains must be configured in <code class="docutils literal notranslate"><span class="pre">tls.truststorefile</span></code>.
+The Certificate Revocation List (CRL) of the CAs in the truststore are periodically downloaded to confirm a peer’s client certificate is not revoked.
+To prevent a CA with downtime on its CRL endpoint from bringing down the network, the Nuts-node uses a soft-fail strategy that does not reject certificates if it cannot download the CRL.
+This behavior can be changed to hard-fail (fail if certificate is invalid, expired, of revoked, or if any of the previous cannot be determined) using the <code class="docutils literal notranslate"><span class="pre">pki.softfail</span></code> config flag.
+The <code class="docutils literal notranslate"><span class="pre">gRPC</span> <span class="pre">Nuts</span> <span class="pre">network</span></code> and <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> endpoints are deprecated and will be removed in the future.</p>
+</section>
+<section id="did-x509">
+<h2>did:x509<a class="headerlink" href="#did-x509" title="Link to this heading"></a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">did:x509</span></code> a certificate is converted to a DID Document (that includes its entire certificate chain) so it can be used in the Verifiable Credentials ecosystem.
+This DID Method provides a temporary bridge between the ‘old’ world of CAs/Certificates and the ‘new’ Verifiable Credential world.
+With other DID Methods, certificates are only used to create an secure channel for communication and optionally for client authentication.
+In <code class="docutils literal notranslate"><span class="pre">did:x509</span></code> the certificates are also used in the cryptographic proofs to obtain access-tokens.
+This means the certificate chain now provides the root of trust and has stricter requirements than connection certificates.</p>
+<p>Certificates and CRLs in the chain may be signed with RSA (PKCS #1 v1.5 or RSASSA-PSS, with SHA-256, SHA-384 or SHA-512), ECDSA or Ed25519.
+This includes the PKIoverheid G4 profile used for UZI server certificates issued from 12 November 2026: RSA 4096 keys with RSASSA-PSS/SHA-512 signatures.</p>
+<p>Trust in specific certificate CAs is configured per use-case in a <a class="reference internal" href="discovery.html#discovery"><span class="std std-ref">Discovery</span></a> and <a class="reference internal" href="policy.html#policy"><span class="std std-ref">Policy</span></a> definition file.
+CRLs from trusted chains (per the above definition files) are consulted when evaluating <code class="docutils literal notranslate"><span class="pre">did:x509</span></code> Verifiable Credentials.
+For certificate chains used in <code class="docutils literal notranslate"><span class="pre">did:x509</span></code> the Nuts-node always uses a hard-fail strategy, i.e., the <code class="docutils literal notranslate"><span class="pre">pki.softfail</span></code> config value is ignored during certificate validation for <code class="docutils literal notranslate"><span class="pre">did:x509</span></code>.
+This means that the Nuts-node will not be able to verify a <code class="docutils literal notranslate"><span class="pre">did:x509</span></code> DID or Verifiable Credential signed by this DID Method if the CRL cannot be downloaded and the CRL in the cache is older than <code class="docutils literal notranslate"><span class="pre">pki.maxupdatefailhours</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="clustering.html" class="btn btn-neutral float-left" title="Clustering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docker.html" class="btn btn-neutral float-right" title="Running on Docker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

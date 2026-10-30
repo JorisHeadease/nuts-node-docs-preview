@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issuing and searching Verifiable Credentials &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Supported Protocols and Formats" href="supported-protocols-formats.html" />
+    <link rel="prev" title="API Authentication" href="api-authentication.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Issuing and searching Verifiable Credentials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#issuing-vcs">Issuing VCs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#searching-vcs">Searching VCs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Issuing and searching Verifiable Credentials</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/integrating/vc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="issuing-and-searching-verifiable-credentials">
+<span id="using-vcs"></span><h1>Issuing and searching Verifiable Credentials<a class="headerlink" href="#issuing-and-searching-verifiable-credentials" title="Link to this heading"></a></h1>
+<section id="issuing-vcs">
+<h2>Issuing VCs<a class="headerlink" href="#issuing-vcs" title="Link to this heading"></a></h2>
+<p>As a node, you can issue credentials with each DID you control (whether they are trusted is a different story).
+A credential is issued through the API.
+The node will add sensible defaults for:</p>
+<ul class="simple">
+<li><p>id</p></li>
+<li><p>issuanceDate</p></li>
+<li><p>proof</p></li>
+</ul>
+<p>You are required to provide the <code class="docutils literal notranslate"><span class="pre">credentialSubject</span></code>, the <code class="docutils literal notranslate"><span class="pre">issuer</span></code>, the <code class="docutils literal notranslate"><span class="pre">type</span></code> and an optional <code class="docutils literal notranslate"><span class="pre">&#64;context</span></code> and <code class="docutils literal notranslate"><span class="pre">expirationDate</span></code>.
+If you do not pass a <cite>&#64;context</cite>, it’ll be set: <code class="docutils literal notranslate"><span class="pre">[&quot;https://www.w3.org/2018/credentials/v1&quot;,</span> <span class="pre">&quot;https://nuts.nl/credentials/v1&quot;]</span></code>.
+Note that this default does not include the latest version of the Nuts JSON-LD context.
+The latest Nuts JSON-LD context can be found <a class="reference internal" href="../technology/jsonld.html#jsonld"><span class="std std-ref">here</span></a>.</p>
+<p>Calling <cite>/internal/vcr/v2/issuer/vc</cite> with</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:ByJvBu2Ex21tNdn5s8FBnqmRBTCGkqRHms5ci7gKM8rg"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NutsOrganizationCredential"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"credentialSubject"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:9UKf9F9sRtiq4gR3bxfGQAeARtJeU8jvPqfWJcFP6ziN"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Because we care B.V."</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IJbergen"</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"visibility"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ldp_vc"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"publishToNetwork"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Will be expanded by the node to:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"https://www.w3.org/2018/credentials/v1"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"https://nuts.nl/credentials/v1"</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"credentialSubject"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:9UKf9F9sRtiq4gR3bxfGQAeARtJeU8jvPqfWJcFP6ziN"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IJbergen"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Because we care B.V."</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:ByJvBu2Ex21tNdn5s8FBnqmRBTCGkqRHms5ci7gKM8rg#a1d8ee3f-f404-44d5-bd07-71d3b144ce54"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issuanceDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-05T09:37:05.732811+01:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:ByJvBu2Ex21tNdn5s8FBnqmRBTCGkqRHms5ci7gKM8rg"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"proof"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-05T09:37:05.732811+01:00"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"jws"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJFUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..s6lxJa7pOpqlhcWhJoKRMJIJiD4i+IUkfmhy+rUvNzZayVHAq+lZaFxBsv9rQCe0ewpZq/6z3hSUOURo6mnHhg=="</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"proofPurpose"</span><span class="p">:</span><span class="w"> </span><span class="s2">"assertionMethod"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JsonWebSignature2020"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"verificationMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:ByJvBu2Ex21tNdn5s8FBnqmRBTCGkqRHms5ci7gKM8rg#gSEtbS2dOsS9PSrV13RwaZHz3Ps6OTI14GvLx8dPqgQ"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"NutsOrganizationCredential"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"VerifiableCredential"</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are three parameters that can be passed:</p>
+<ul class="simple">
+<li><p><cite>format</cite> (optional): The format of the VC. Can be <code class="docutils literal notranslate"><span class="pre">ldp_vc</span></code> or <code class="docutils literal notranslate"><span class="pre">jwt_vc</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">ldp_vc</span></code>.</p></li>
+<li><p><cite>publishToNetwork</cite> (did:nuts only, optional): Whether the VC should be published on the network. Default is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p><cite>visibility</cite> (did:nuts only, optional): The visibility of the VC. Can be <code class="docutils literal notranslate"><span class="pre">public</span></code> or <code class="docutils literal notranslate"><span class="pre">private</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">private</span></code>.</p></li>
+<li><p><cite>withStatusList2021Revocation</cite> (no did:nuts, optional): Whether the VC should be issued with a status list 2021 revocation. Default is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+</ul>
+</section>
+<section id="searching-vcs">
+<span id="id1"></span><h2>Searching VCs<a class="headerlink" href="#searching-vcs" title="Link to this heading"></a></h2>
+<p>You can search for VCs by providing a VC which should be used for matching in JSON-LD format.
+Searching works by posting a Verifiable Credential to <cite>/internal/vcr/v2/search</cite> that contains fields to match.
+The operation yields an array containing the matched verifiable credentials.</p>
+<p>The example below searches for a <cite>NutsOrganizationCredential</cite> (note that the <cite>query</cite> field contains the credential):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"https://www.w3.org/2018/credentials/v1"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"https://nuts.nl/credentials/v1"</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"VerifiableCredential"</span><span class="w"> </span><span class="p">,</span><span class="s2">"NutsOrganizationCredential"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"credentialSubject"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"did:nuts:SKUYYi2g88ohjhiu49Q13ZWGXvp678sjNiM7UHUCMyw"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Because we care B.V."</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IJbergen"</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note the fields <cite>&#64;context</cite> and <cite>type</cite>, these are required for making it a valid VC in JSON-LD.
+In the example above they also contain Nuts specific contexts and types (since we’re searching for a Nuts VC).
+The fields <cite>&#64;context</cite> and <cite>type</cite> are not used as query parameters for searching, they are required to determine the right context.
+The following query does not return all <cite>NutsOrganizationCredential</cite> but <strong>all</strong> credentials.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"https://www.w3.org/2018/credentials/v1"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"https://nuts.nl/credentials/v1"</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"VerifiableCredential"</span><span class="w"> </span><span class="p">,</span><span class="s2">"NutsOrganizationCredential"</span><span class="p">],</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To find certain credentials, you’ll need to add fields that are required to exist in the desired credential.
+By default, matching is exact: it only returns the result when the given value exactly matches.
+There are 2 other matchers for strings:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;*&quot;</span></code> to match credential fields that contain the field (non-empty)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*</span></code> as postfix to match credential fields that start with the given string, e.g. <code class="docutils literal notranslate"><span class="pre">Hospital</span> <span class="pre">Amst*</span></code></p></li>
+</ul>
+<p>When <code class="docutils literal notranslate"><span class="pre">*</span></code> is used anywhere else in the string it won’t be interpreted as wildcard and matched as-is.
+Wildcards are not supported for other types than strings.</p>
+<p>The following example showcases both matchers:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"https://www.w3.org/2018/credentials/v1"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"https://nuts.nl/credentials/v1"</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"VerifiableCredential"</span><span class="w"> </span><span class="p">,</span><span class="s2">"NutsOrganizationCredential"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"credentialSubject"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hospital Amst*"</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>By default only VCs from trusted issuers are returned. You can specify the <cite>searchOptions</cite> field to include VCs from untrusted issuers.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api-authentication.html" class="btn btn-neutral float-left" title="API Authentication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="supported-protocols-formats.html" class="btn btn-neutral float-right" title="Supported Protocols and Formats" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

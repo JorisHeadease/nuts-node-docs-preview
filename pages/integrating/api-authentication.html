@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Authentication &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Issuing and searching Verifiable Credentials" href="vc.html" />
+    <link rel="prev" title="API Reference" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Authentication</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jwt-requirements">JWT requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementing-api-authentication">Implementing API Authentication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generating-authorized-keys-file">Generating <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generating-kid-field">Generating <code class="docutils literal notranslate"><span class="pre">kid</span></code> field</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nuts-jwt-generator">nuts-jwt-generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-keys">Generating keys</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Authentication</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/integrating/api-authentication.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-authentication">
+<span id="nuts-node-api-authentication"></span><h1>API Authentication<a class="headerlink" href="#api-authentication" title="Link to this heading"></a></h1>
+<p>The Nuts node’s <code class="docutils literal notranslate"><span class="pre">/internal</span></code> HTTP endpoints can be configured to require signed JWT tokens before allowing calls.</p>
+<p>When enabled you need to pass a bearer token as <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header:</p>
+<blockquote>
+<div><p>Authorization: Bearer (token)</p>
+</div></blockquote>
+<p>When authentication fails the API will return <code class="docutils literal notranslate"><span class="pre">HTTP</span> <span class="pre">401</span> <span class="pre">Unauthorized</span></code>. The logs on the nuts-node will provide
+an explanation about the failure.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The JWTs and private keys used in this authentication scheme are secrets and should never be shared with anyone. No one should ever ask you to send them your JWTs or private keys.</p>
+</div>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Authentication can be enabled by setting <code class="docutils literal notranslate"><span class="pre">http.internal.auth.type</span></code> (see example below) to <code class="docutils literal notranslate"><span class="pre">token_v2</span></code>.
+Endpoints under <code class="docutils literal notranslate"><span class="pre">/internal</span></code> will then require a JWT signed by an authorized key.</p>
+<p>Authorized (public) keys are specified in an <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> file configured by the <code class="docutils literal notranslate"><span class="pre">http.internal.auth.type.authorizedkeyspath</span></code> parameter.
+This file should contain one or more trusted keys, in the standard SSH format. ECDSA, Ed25519, and RSA (&gt;=2048-bit) keys
+are accepted. Each line in the file must contain the key-type, key-specification, and user name that is authorized,
+for example <code class="docutils literal notranslate"><span class="pre">ssh-ed25519</span> <span class="pre">AAAAC3NzaC1lZDI1NTE5AAAAIH1VNKtThJiI6c5zjLn/6EjRq1PtfM4qw4HM71zivIVn</span> <span class="pre">john.doe&#64;company.com</span></code>.
+Note that this file should be a distinct <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> file from that used to grant console access to the
+nuts node. API access and SSH access are two entirely different matters and we are simply using this well known
+configuration file format. The Nuts node does not integrate in any way with the SSH subsystem on the host OS.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">http</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">internal</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">auth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">token_v2</span><span class="w">                                 </span><span class="c1"># enables authentication</span>
+<span class="w">      </span><span class="nt">authorizedkeyspath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/nuts/authorized_keys</span><span class="w">  </span><span class="c1"># path to the file containing public keys that are allowed to authenticate.</span>
+<span class="w">                                                     </span><span class="c1"># JWTs must be signed with a key registered in this file,</span>
+<span class="w">      </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nuts-node.example.com</span><span class="w">                </span><span class="c1"># audience for the JWT, defaults to the machine's host name</span>
+</pre></div>
+</div>
+</section>
+<section id="jwt-requirements">
+<h2>JWT requirements<a class="headerlink" href="#jwt-requirements" title="Link to this heading"></a></h2>
+<p>JWT’s can be generated in code and must meet the following requirements:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">iss</span></code> field must be present</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">iss</span></code> field must match the username specified in the comment of an <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> entry</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">sub</span></code> field must be present and non-empty (set it to the issuer if you are unsure which value to use)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">iat</span></code> field must be present</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">nbf</span></code> field must be present</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">iat</span></code> value must occur at or before the <code class="docutils literal notranslate"><span class="pre">nbf</span></code> value</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">exp</span></code> field must be present</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">exp</span></code> value must occur no more than 24 hours after the <code class="docutils literal notranslate"><span class="pre">iat</span></code> value</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">jti</span></code> field must be present and contain a <a class="reference external" href="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</a> string</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">aud</span></code> field must be present</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">aud</span></code> field must contain the configured <code class="docutils literal notranslate"><span class="pre">auth.audience</span></code> parameter (hostname by default) on the nuts node</p></li>
+<li><p>The JWT must be signed by a known ECDSA, Ed25519, or RSA (&gt;=2048-bit) key as configured in <code class="docutils literal notranslate"><span class="pre">auth.authorizedkeyspath</span></code></p></li>
+<li><p>Signatures based on RSA keys may use the RS512 or PS512 algorithms only</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">kid</span></code> field must contain either the <a class="reference external" href="https://www.rfc-editor.org/rfc/rfc7638">JWK SHA-256 Thumbprint</a> (e.g. <code class="docutils literal notranslate"><span class="pre">NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs</span></code>) or the <a class="reference external" href="https://www.ietf.org/rfc/rfc4253.txt">SSH SHA-256 fingerprint</a> (e.g. <code class="docutils literal notranslate"><span class="pre">SHA256:G5hwd24Zl7dyTsAGVxqyZk6z+oJ5UxWcIRL3fWGj7wk</span></code>) of the signing key</p></li>
+<li><p>The JWT must not be encrypted</p></li>
+</ul>
+<p>The following entries MUST NOT be present:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">jwk</span></code> field (embeds the public key)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">jku</span></code> field (embeds a URL for fetching the public key)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">x5c</span></code> field (embeds an X.509 certificate chain,)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">x5u</span></code> field (embeds a URL for fetching the public key in X.509 form)</p></li>
+</ul>
+</section>
+<section id="implementing-api-authentication">
+<h2>Implementing API Authentication<a class="headerlink" href="#implementing-api-authentication" title="Link to this heading"></a></h2>
+<p>Generally speaking for your application to access the protected API endpoints the following process must be followed:</p>
+<ol class="arabic simple">
+<li><p>Generate a private Ed25519, ECDSA, or RSA (&gt;=2048-bit) key. Use Ed25519 if unsure which type to use.</p></li>
+<li><p>Generate an <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> entry for your public key and configure the Nuts node with it (see below).</p></li>
+<li><p>Create a JWT, meeting the above specifications</p></li>
+<li><p>Sign the JWT using the key generated in step 1.</p></li>
+<li><p>Include the encoded JWT as a bearer token in the <code class="docutils literal notranslate"><span class="pre">Authorization</span></code> header of API requests.</p></li>
+<li><p>Stop using the JWT before it expires, rotating it for a freshly generated JWT.</p></li>
+<li><p>Be careful to keep your JWTs out of log messages etc., and treat them as secret at all times.</p></li>
+</ol>
+<p>The following events are audited concerning API authentication:
+- <code class="docutils literal notranslate"><span class="pre">AccessKeyRegistered</span></code> for each authorized key, on startup.
+- <code class="docutils literal notranslate"><span class="pre">AccessDenied</span></code> when a JWT fails to authenticate.
+- <code class="docutils literal notranslate"><span class="pre">AccessGranted</span></code> when a JWT successfully authenticates.</p>
+<section id="generating-authorized-keys-file">
+<h3>Generating <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> file<a class="headerlink" href="#generating-authorized-keys-file" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> files are made up of multiple lines, each line specifying one more key/user that is authorized. For more information on the authorized_keys format see the <code class="docutils literal notranslate"><span class="pre">AUTHORIZED_KEYS</span> <span class="pre">FILE</span> <span class="pre">FORMAT</span></code> section of the <a class="reference external" href="http://man.he.net/man5/authorized_keys">man page</a>.</p>
+<p>The following is an example <code class="docutils literal notranslate"><span class="pre">authorized_keys</span></code> file. Each line specifies the key type, the public key, and the username:</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ecdsa</span><span class="o">-</span><span class="n">sha2</span><span class="o">-</span><span class="n">nistp256</span> <span class="n">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBAPwLGkaO5dWEx29sW4xnmv</span><span class="o">/</span><span class="n">s8</span><span class="o">+</span><span class="n">Nzj3mnkY6SX9Qnb91oyPayZV8Ts3TXSMKlkyYHVcIz</span><span class="o">/</span><span class="n">nAxRgxgKBTMwZc2wE</span><span class="o">=</span> <span class="n">alice</span><span class="nd">@company</span><span class="o">.</span><span class="n">com</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">ed25519</span> <span class="n">AAAAC3NzaC1lZDI1NTE5AAAAIAwaOa7iN1gnKEfiZAA7lhu3SIvfdzYE3VbswsVUQP7F</span> <span class="n">bob</span><span class="nd">@company</span><span class="o">.</span><span class="n">com</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">ed25519</span> <span class="n">AAAAC3NzaC1lZDI1NTE5AAAAIH1VNKtThJiI6c5zjLn</span><span class="o">/</span><span class="mi">6</span><span class="n">EjRq1PtfM4qw4HM71zivIVn</span> <span class="n">dan</span><span class="nd">@company</span><span class="o">.</span><span class="n">com</span>
+<span class="n">ecdsa</span><span class="o">-</span><span class="n">sha2</span><span class="o">-</span><span class="n">nistp256</span> <span class="n">AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBC54Az33UVYdRSTb</span><span class="o">/</span><span class="mi">2</span><span class="n">N9LiZtL7TRiEox5</span><span class="o">+</span><span class="n">rJcnMYz</span><span class="o">+</span><span class="n">t30l4UG5Y8ZN6L2dJCCFWyQeeJ</span><span class="o">/</span><span class="n">oTOY915L9</span><span class="o">/</span><span class="n">miklDyhk</span><span class="o">=</span> <span class="n">heidi</span><span class="nd">@company</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl>
+<dt>To generate a key’s authorized_keys form using ssh-keygen:</dt><dd><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-y<span class="w"> </span>-f<span class="w"> </span>/path/to/keyfile
+</pre></div>
+</div>
+</dd>
+</dl>
+</section>
+<section id="generating-kid-field">
+<h3>Generating <code class="docutils literal notranslate"><span class="pre">kid</span></code> field<a class="headerlink" href="#generating-kid-field" title="Link to this heading"></a></h3>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> to generate the SSH fingerprint (used in the <code class="docutils literal notranslate"><span class="pre">kid</span></code> field) of a key:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-lf<span class="w"> </span>/path/to/keyfile
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="nuts-jwt-generator">
+<h2>nuts-jwt-generator<a class="headerlink" href="#nuts-jwt-generator" title="Link to this heading"></a></h2>
+<p>The nuts-jwt-generator is a command-line tool that can be used to generate JWTs and authorized_keys entries.
+For instance, when <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> is unavailable on your platform or when using Ed25519 keys (see below).
+It is available on the nuts-foundation <a class="reference external" href="https://github.com/nuts-foundation/jwt-generator">GitHub page</a>.</p>
+<p>To generate a key’s authorized_keys form (for configuration of the Nuts node) using nuts-jwt-generator:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>nuts-jwt-generator<span class="w"> </span>-i<span class="w"> </span>/path/to/keyfile<span class="w"> </span>--export-authorized-key
+</pre></div>
+</div>
+<p>To generate the SSH fingerprint of a key (for specifying as <code class="docutils literal notranslate"><span class="pre">kid</span></code> field) using nuts-jwt-generator:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>nuts-jwt-generator<span class="w"> </span>-i<span class="w"> </span>/path/to/keyfile<span class="w"> </span>-export-ssh-fingerprint
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> command unfortunately fails for Ed25519 PEM keys at the time of this writing due to a <a class="reference external" href="https://bugzilla.mindrot.org/show_bug.cgi?id=3195">bug</a> and poor recent support for Ed25519 in libcrypto packages.
+You can use the nuts-jwt-generator until this bug is fixed for keys of this type.</p>
+</section>
+<section id="generating-keys">
+<h2>Generating keys<a class="headerlink" href="#generating-keys" title="Link to this heading"></a></h2>
+<p>Just for reference, this section lists various commands to generate key pairs for signing JWTs, using <code class="docutils literal notranslate"><span class="pre">ssh-keygen</span></code> and <code class="docutils literal notranslate"><span class="pre">openssl</span></code>.</p>
+<p>To generate an ECDSA key using ssh-keygen:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ecdsa<span class="w"> </span>-b<span class="w"> </span><span class="m">521</span><span class="w"> </span>-f<span class="w"> </span>/path/to/keyfile
+</pre></div>
+</div>
+</div></blockquote>
+<p>To generate an RSA key using ssh-keygen:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span>-f<span class="w"> </span>/path/to/keyfile
+</pre></div>
+</div>
+</div></blockquote>
+<p>To generate an Ed25519 key with using ssh-keygen:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-f<span class="w"> </span>/path/to/keyfile
+</pre></div>
+</div>
+</div></blockquote>
+<p>To generate an ECDSA key with OpenSSL:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>openssl<span class="w"> </span>genpkey<span class="w"> </span>-algorithm<span class="w"> </span>EC<span class="w"> </span>-pkeyopt<span class="w"> </span>ec_paramgen_curve:P-521<span class="w"> </span>-pkeyopt<span class="w"> </span>ec_param_enc:named_curve<span class="w"> </span>-out<span class="w"> </span>/path/to/keyfile.pem
+</pre></div>
+</div>
+</div></blockquote>
+<p>To generate an RSA key with OpenSSL:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>openssl<span class="w"> </span>genpkey<span class="w"> </span>-algorithm<span class="w"> </span>RSA<span class="w"> </span>-pkeyopt<span class="w"> </span>rsa_keygen_bits:4096<span class="w"> </span>-out<span class="w"> </span>/path/to/rsa-private.pem
+</pre></div>
+</div>
+</div></blockquote>
+<p>To generate an Ed25519 key with OpenSSL:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>openssl<span class="w"> </span>genpkey<span class="w"> </span>-algorithm<span class="w"> </span>ed25519<span class="w"> </span>-out<span class="w"> </span>/path/to/keyfile.pem
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vc.html" class="btn btn-neutral float-right" title="Issuing and searching Verifiable Credentials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

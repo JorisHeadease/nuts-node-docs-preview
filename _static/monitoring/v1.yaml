@@ -1,0 +1,121 @@
+openapi: "3.0.0"
+info:
+  title: Nuts Node Monitoring API spec
+  description: API specification for monitoring of the nuts node
+  version: 1.0.0
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+servers:
+  - url: http://localhost:8081
+paths:
+  /health:
+    get:
+      summary: "More elaborate health check to conform the node is (probably) functioning correctly"
+      description: "Returns the status in Spring Boot Health format."
+      operationId: checkHealth
+      tags:
+        - status
+      responses:
+        200:
+          description: "Returned when the status is UP"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckHealthResponse"
+  /status:
+    get:
+      summary: "healthcheck to confirm node is up and running"
+      description: |
+        Check if the node is up and running.
+      operationId: getStatus
+      tags:
+        - status
+      responses:
+        200:
+          description: '"OK" when the node is up and running'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "OK"
+  /status/diagnostics:
+    get:
+      summary: "get node diagnostics"
+      description: |
+        Get basic information on the
+        * connected peers
+        * DAG state
+        * node build info
+      operationId: getDiagnostics
+      tags:
+        - status
+      responses:
+        200:
+          description: Basic nuts-node diagnostics
+          content:
+            application/json:
+              schema:
+                type: object
+            text/plain:
+              schema:
+                type: string
+            application/yaml:
+              schema:
+                type: object
+  /metrics:
+    get:
+      summary: "collect metrics"
+      description: |
+        Collect metrics in prometheus format.
+        
+        Metrics are exported in the following namespaces:
+        * `nuts_` contains metrics related to the functioning of the Nuts node
+        * `process_` contains OS metrics related to the process
+        * `go_` contains Go metrics related to the process
+        * `http_` contains metrics related to HTTP calls to the Nuts node
+        * `promhttp_` contains prometheus metrics related to HTTP calls to the `/metrics` endpoint
+      operationId: getMetrics
+      tags:
+        - metrics
+      responses:
+        200:
+          description: Monitoring metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    CheckHealthResponse:
+      required:
+        - status
+        - details
+      properties:
+        status:
+          type: string
+          description: Overall status derived from performed health checks. Values are "UP", "DOWN" and "UNKNOWN".
+          example: "UP"
+        details:
+          type: object
+          description: Map of the performed health checks and their results.
+          additionalProperties:
+            $ref: "#/components/schemas/HealthCheckResult"
+          example:
+            database:
+              status: "UP"
+            network:
+              status: "UP"
+    HealthCheckResult:
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Status of the health check. Values are "UP", "DOWN" and "UNKNOWN".
+          example: "UP"
+        details:
+          description: Details of the health check result.
+          example: "connected to 3 peers"
+
+

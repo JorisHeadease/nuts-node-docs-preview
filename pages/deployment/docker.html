@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Running on Docker &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Storage" href="storage.html" />
+    <link rel="prev" title="Certificates" href="certificates.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Running on Docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#docker-run">Docker <code class="docutils literal notranslate"><span class="pre">run</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker-compose">Docker Compose</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#user">User</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#volume-mounts">Volume mounts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verifying-image-signatures">Verifying image signatures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#checking-a-signature-with-cosign">Checking a signature with cosign</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deploying-a-verified-digest">Deploying a verified digest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#enforcing-verification-in-kubernetes">Enforcing verification in Kubernetes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#azure">Azure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#provenance-and-sbom">Provenance and SBOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scope-of-the-guarantee">Scope of the guarantee</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development-image">Development image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Running on Docker</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/docker.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="running-on-docker">
+<span id="running-docker"></span><h1>Running on Docker<a class="headerlink" href="#running-on-docker" title="Link to this heading"></a></h1>
+<p>This guide helps you to configure the Nuts node in Docker.
+To use the most recent release use <code class="docutils literal notranslate"><span class="pre">nutsfoundation/nuts-node:latest</span></code>. For production environments it’s advised to use a specific version.</p>
+<p>Published images are signed. See <a class="reference internal" href="#verifying-images"><span class="std std-ref">Verifying image signatures</span></a> below to check that an image was built from the published source code.</p>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="docker-run">
+<h3>Docker <code class="docutils literal notranslate"><span class="pre">run</span></code><a class="headerlink" href="#docker-run" title="Link to this heading"></a></h3>
+<p>If you want to run without Docker Compose you can use the following command from the working directory:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>nuts<span class="w"> </span>-p<span class="w"> </span><span class="m">8080</span>:8080<span class="w"> </span>-p<span class="w"> </span><span class="m">8081</span>:8081<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">NUTS_STRICTMODE</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">NUTS_HTTP_INTERNAL_ADDRESS</span><span class="o">=</span><span class="s2">":8081"</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">NUTS_URL</span><span class="o">=</span><span class="s2">"http://nuts"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>nutsfoundation/nuts-node:latest
+</pre></div>
+</div>
+</section>
+<section id="docker-compose">
+<h3>Docker Compose<a class="headerlink" href="#docker-compose" title="Link to this heading"></a></h3>
+<p>Copy the following YAML file and save it as <code class="docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code> in the working directory.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nuts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutsfoundation/nuts-node:latest</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">NUTS_STRICTMODE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">NUTS_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://nuts</span>
+<span class="w">      </span><span class="nt">NUTS_HTTP_INTERNAL_ADDRESS</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:8081</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080:8080</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8081:8081</span>
+</pre></div>
+</div>
+<p>Start the service:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>compose<span class="w"> </span>up
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your use case makes use of <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DIDs, you also need to export port <code class="docutils literal notranslate"><span class="pre">5555</span></code>, which is used for gRPC traffic by the Nuts network,
+and add a volume mount for data on <code class="docutils literal notranslate"><span class="pre">/nuts/data</span></code> (see below).</p>
+</div>
+<p>You can test whether your Nuts Node is running properly by visiting <code class="docutils literal notranslate"><span class="pre">http://localhost:8081/health</span></code>. It should
+display health information about the state of the node.</p>
+</section>
+</section>
+<section id="user">
+<h2>User<a class="headerlink" href="#user" title="Link to this heading"></a></h2>
+<p>The default user in the container is <code class="docutils literal notranslate"><span class="pre">18081</span></code> that is only part of group <code class="docutils literal notranslate"><span class="pre">18081</span></code>.
+This is a regular user without root privileges to provide an additional level of security.
+If <code class="docutils literal notranslate"><span class="pre">datadir</span></code> config value points to a mounted directory, see the section below how to manage privileges needed by the nuts-node.</p>
+</section>
+<section id="volume-mounts">
+<h2>Volume mounts<a class="headerlink" href="#volume-mounts" title="Link to this heading"></a></h2>
+<p>The default working directory within the container is <code class="docutils literal notranslate"><span class="pre">/nuts</span></code> that provides defaults for the various configurable data and config paths used:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>/nuts/config/</strong>: Contains all configuration files.</dt><dd><p>Any file changes will take effect <em>after</em> a node restart. It is recommended to set read-only privileges (default) to this directory and its contents for additional security.
+(<code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">-R</span> <span class="pre">o+r</span> <span class="pre">&lt;/path/to/host/config-dir&gt;</span></code> assuming the directory on the host is <em>not</em> owned by user and/or group <code class="docutils literal notranslate"><span class="pre">18081</span></code>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>/nuts/data/</strong>: Storage directory for data managed by the nuts-node.</dt><dd><p>The container user (<code class="docutils literal notranslate"><span class="pre">18081</span></code>) has insufficient privileges by default to write to mounted directories.
+The required permissions can be granted by making the container user the owner of the <code class="docutils literal notranslate"><span class="pre">data</span></code> directory on the host. (<code class="docutils literal notranslate"><span class="pre">chown</span> <span class="pre">-R</span> <span class="pre">18081:18081</span> <span class="pre">&lt;/path/to/host/data-dir&gt;</span></code>)</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Nodes running the <a class="reference internal" href="recommended-deployment.html#nuts-node-recommended-deployment"><span class="std std-ref">recommended deployment</span></a> (external storage configured for <code class="docutils literal notranslate"><span class="pre">crypto.storage</span></code> and <code class="docutils literal notranslate"><span class="pre">storage.sql.connection</span></code>) that do not use did:nuts / gRPC network don’t need to mount a <code class="docutils literal notranslate"><span class="pre">data</span></code> dir.</p></li>
+<li><p><em>“User 18081 already exists on my host.”</em> See <a class="reference external" href="https://docs.docker.com/engine/security/userns-remap/">docker security</a> (or relevant container orchestration platform) documentation how to restrict privileges to a user namespace / create a user mapping between host and container.</p></li>
+</ul>
+</div>
+</section>
+<section id="verifying-image-signatures">
+<span id="verifying-images"></span><h2>Verifying image signatures<a class="headerlink" href="#verifying-image-signatures" title="Link to this heading"></a></h2>
+<p>Docker images of the Nuts node are built and pushed to Docker Hub by a GitHub Actions workflow.
+The workflow signs each pushed image with <a class="reference external" href="https://www.sigstore.dev/">Sigstore</a> cosign, using the identity of the workflow itself.
+A valid signature proves that the image was built by the CI pipeline of the <code class="docutils literal notranslate"><span class="pre">nuts-foundation/nuts-node</span></code> repository, from a specific commit.
+An image built on a developer machine and pushed with Docker Hub credentials does not carry a valid signature.</p>
+<p>This section shows how to check a signature by hand, how to deploy a verified digest, and how to enforce verification in Kubernetes and in CI pipelines.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Signing was introduced in 6.2.12 and 5.4.39; images of earlier releases are not signed.
+Security fixes are prepared in the private repository <code class="docutils literal notranslate"><span class="pre">nuts-foundation/nuts-node-private</span></code> and may be released before their source code is public.
+Images of such a release are signed with the identity of that repository’s workflow; the verification commands below accept both identities.
+The source code of an embargoed release becomes available in the public repository at disclosure.</p>
+</div>
+<section id="checking-a-signature-with-cosign">
+<h3>Checking a signature with cosign<a class="headerlink" href="#checking-a-signature-with-cosign" title="Link to this heading"></a></h3>
+<p>The pipeline signs with cosign 3.
+That version stores a signature as a <a class="reference external" href="https://docs.sigstore.dev/about/bundle/">Sigstore bundle</a>, attached to the image through the OCI referrers API, instead of the <code class="docutils literal notranslate"><span class="pre">sha256-&lt;digest&gt;.sig</span></code> tag that cosign 2 used.
+cosign 2 does not find such a signature and fails with <code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">signatures</span> <span class="pre">found</span></code>, and so does any other verifier that only reads the tag.
+The Kubernetes and Azure sections below show which setting switches those verifiers to the bundle format.</p>
+<p>Install <a class="reference external" href="https://docs.sigstore.dev/cosign/system_config/installation/">cosign</a> (version 3.0 or later) and verify a tag:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cosign<span class="w"> </span>verify<span class="w"> </span>nutsfoundation/nuts-node:latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span>https://token.actions.githubusercontent.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="s1">'^https://github.com/nuts-foundation/nuts-node(-private)?/\.github/workflows/build-images\.yaml@'</span>
+</pre></div>
+</div>
+<p>cosign exits with code 0 and prints the verified claims when the signature is valid.
+The two flags pin the identity you trust:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--certificate-oidc-issuer</span></code>: the identity provider. For images built on GitHub Actions this is always <code class="docutils literal notranslate"><span class="pre">https://token.actions.githubusercontent.com</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--certificate-identity-regexp</span></code>: the workflow that requested the signing certificate. Only the <code class="docutils literal notranslate"><span class="pre">build-images.yaml</span></code> workflow in the <code class="docutils literal notranslate"><span class="pre">nuts-foundation/nuts-node</span></code> repository, or in <code class="docutils literal notranslate"><span class="pre">nuts-foundation/nuts-node-private</span></code> for embargoed security releases, matches this expression.</p></li>
+</ul>
+<p>Each signature is also recorded in the public <a class="reference external" href="https://docs.sigstore.dev/rekor/overview">Rekor</a> transparency log, so anyone can audit when and by which workflow signatures were produced.</p>
+</section>
+<section id="deploying-a-verified-digest">
+<h3>Deploying a verified digest<a class="headerlink" href="#deploying-a-verified-digest" title="Link to this heading"></a></h3>
+<p>A tag such as <code class="docutils literal notranslate"><span class="pre">latest</span></code> or a version number is mutable: verifying a tag and pulling the same tag later can yield different images.
+To close that gap, deploy by digest.
+cosign prints the digest of the image it verified (this command requires <code class="docutils literal notranslate"><span class="pre">jq</span></code>):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">DIGEST</span><span class="o">=</span><span class="k">$(</span>cosign<span class="w"> </span>verify<span class="w"> </span>nutsfoundation/nuts-node:latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-oidc-issuer<span class="w"> </span>https://token.actions.githubusercontent.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--certificate-identity-regexp<span class="w"> </span><span class="s1">'^https://github.com/nuts-foundation/nuts-node(-private)?/\.github/workflows/build-images\.yaml@'</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.[0].critical.image."docker-manifest-digest"'</span><span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"nutsfoundation/nuts-node@</span><span class="si">${</span><span class="nv">DIGEST</span><span class="si">}</span><span class="s2">"</span>
+</pre></div>
+</div>
+<p>Use the printed reference in <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> or in <code class="docutils literal notranslate"><span class="pre">docker-compose.yaml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nuts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nutsfoundation/nuts-node@sha256:...</span>
+</pre></div>
+</div>
+</section>
+<section id="enforcing-verification-in-kubernetes">
+<h3>Enforcing verification in Kubernetes<a class="headerlink" href="#enforcing-verification-in-kubernetes" title="Link to this heading"></a></h3>
+<p>The examples in this section and the Azure one below are meant to get you started, not to be pasted into production unchanged.
+They are written against the versions named with each example, and setups differ, so try them in your own cluster or pipeline first.
+If something turns out to be wrong or outdated, let us know or open a pull request.</p>
+<p>An admission controller can reject any pod whose image does not carry a valid signature.
+The example below uses <a class="reference external" href="https://kyverno.io/">Kyverno</a>.
+The Sigstore <a class="reference external" href="https://docs.sigstore.dev/policy-controller/overview/">policy-controller</a> offers the same enforcement through a <code class="docutils literal notranslate"><span class="pre">ClusterImagePolicy</span></code>; set <code class="docutils literal notranslate"><span class="pre">signatureFormat:</span> <span class="pre">bundle</span></code> on the authority there, for the same reason (policy-controller 0.14 or later).</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kyverno.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterPolicy</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">verify-nuts-node-images</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">webhookTimeoutSeconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">require-signed-nuts-node</span>
+<span class="w">      </span><span class="nt">match</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">any</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">kinds</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="w">      </span><span class="nt">verifyImages</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">imageReferences</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"docker.io/nutsfoundation/nuts-node*"</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SigstoreBundle</span>
+<span class="w">          </span><span class="nt">failureAction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enforce</span>
+<span class="w">          </span><span class="nt">attestors</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">entries</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">keyless</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">"https://token.actions.githubusercontent.com"</span>
+<span class="w">                    </span><span class="nt">subjectRegExp</span><span class="p">:</span><span class="w"> </span><span class="s">"^https://github.com/nuts-foundation/nuts-node(-private)?/\\.github/workflows/build-images\\.yaml@"</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">SigstoreBundle</span></code> is what makes Kyverno read the signature from the OCI referrers API.
+Without it Kyverno uses its default type <code class="docutils literal notranslate"><span class="pre">Cosign</span></code>, which looks for the <code class="docutils literal notranslate"><span class="pre">sha256-&lt;digest&gt;.sig</span></code> tag and rejects every Nuts node image.
+Both <code class="docutils literal notranslate"><span class="pre">type</span></code> and the per-rule <code class="docutils literal notranslate"><span class="pre">failureAction</span></code> require Kyverno 1.13 or later.</p>
+<p>The policy matches only Nuts node images; other images in the cluster are unaffected.
+Kyverno replaces the tag with the verified digest on admission, so the pod runs exactly the image that was verified.
+The cluster needs outbound access to Docker Hub for the signature, and to the Sigstore TUF repository (<code class="docutils literal notranslate"><span class="pre">tuf-repo-cdn.sigstore.dev</span></code>) for the trust root.</p>
+</section>
+<section id="azure">
+<h3>Azure<a class="headerlink" href="#azure" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Azure Kubernetes Service (AKS)</strong>: the Kyverno policy above works unchanged. Azure’s own <a class="reference external" href="https://learn.microsoft.com/en-us/azure/aks/image-integrity">Image Integrity</a> feature (Azure Policy with <a class="reference external" href="https://ratify.dev/">Ratify</a>) is not an alternative for these images: it is a preview feature that its documentation says not to use in production, Notation is its only supported verifier, and Audit is its only supported effect. It cannot check a cosign signature.</p></li>
+<li><p><strong>Azure Container Apps and Container Instances</strong>: these services have no admission control. Verify in the deployment pipeline and deploy by digest.</p></li>
+<li><p><strong>Azure DevOps pipelines</strong>: add a verification step before deployment. The step needs cosign 3.0 or later; pin the version rather than downloading <code class="docutils literal notranslate"><span class="pre">latest</span></code>.</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bash@3</span>
+<span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify nuts-node image signature</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">targetType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inline</span>
+<span class="w">      </span><span class="nt">script</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">set -euo pipefail</span>
+<span class="w">        </span><span class="no">COSIGN_VERSION=v3.1.3</span>
+<span class="w">        </span><span class="no">curl -sLo cosign "https://github.com/sigstore/cosign/releases/download/${COSIGN_VERSION}/cosign-linux-amd64"</span>
+<span class="w">        </span><span class="no">chmod +x cosign</span>
+<span class="w">        </span><span class="no">DIGEST=$(./cosign verify "nutsfoundation/nuts-node:$(NUTS_VERSION)" \</span>
+<span class="w">          </span><span class="no">--certificate-oidc-issuer https://token.actions.githubusercontent.com \</span>
+<span class="w">          </span><span class="no">--certificate-identity-regexp '^https://github.com/nuts-foundation/nuts-node(-private)?/\.github/workflows/build-images\.yaml@' \</span>
+<span class="w">          </span><span class="no">--output json | jq -r '.[0].critical.image."docker-manifest-digest"')</span>
+<span class="w">        </span><span class="no">echo "##vso[task.setvariable variable=NUTS_IMAGE]nutsfoundation/nuts-node@${DIGEST}"</span>
+</pre></div>
+</div>
+<p>Later pipeline steps deploy <code class="docutils literal notranslate"><span class="pre">$(NUTS_IMAGE)</span></code>, for example with the <code class="docutils literal notranslate"><span class="pre">AzureContainerApps</span></code> or <code class="docutils literal notranslate"><span class="pre">KubernetesManifest</span></code> tasks.</p>
+</section>
+<section id="provenance-and-sbom">
+<h3>Provenance and SBOM<a class="headerlink" href="#provenance-and-sbom" title="Link to this heading"></a></h3>
+<p>Each image contains SLSA build provenance and an SPDX software bill of materials, embedded as attestation manifests in the image index.
+The provenance records the source repository, the commit, and the build parameters.
+Inspect them with:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>buildx<span class="w"> </span>imagetools<span class="w"> </span>inspect<span class="w"> </span>nutsfoundation/nuts-node:latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--format<span class="w"> </span><span class="s1">'{{ json .Provenance }}'</span>
+docker<span class="w"> </span>buildx<span class="w"> </span>imagetools<span class="w"> </span>inspect<span class="w"> </span>nutsfoundation/nuts-node:latest<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--format<span class="w"> </span><span class="s1">'{{ json .SBOM }}'</span>
+</pre></div>
+</div>
+<p>The attestations are part of the image index, so the cosign signature on the image digest covers them.</p>
+</section>
+<section id="scope-of-the-guarantee">
+<h3>Scope of the guarantee<a class="headerlink" href="#scope-of-the-guarantee" title="Link to this heading"></a></h3>
+<p>A valid signature proves that the image was built and pushed by the <code class="docutils literal notranslate"><span class="pre">build-images.yaml</span></code> workflow of the <code class="docutils literal notranslate"><span class="pre">nuts-foundation/nuts-node</span></code> repository (or <code class="docutils literal notranslate"><span class="pre">nuts-node-private</span></code> for embargoed security releases), at the commit recorded in the certificate, and that the image was not modified afterwards.
+For an embargoed release the commit is not publicly readable until disclosure; until then the signature proves the origin of the image but the source cannot be audited.
+It does not prove that the source code at that commit is free of defects or malicious changes.
+Review of the source code, and of who may change it, remains the basis of trust.</p>
+</section>
+</section>
+<section id="development-image">
+<h2>Development image<a class="headerlink" href="#development-image" title="Link to this heading"></a></h2>
+<p>There’s also a development image available which includes an HTTPS tunnel.
+This is useful for development and testing purposes. In order to use it, you need a Github account.
+The development image is available at Docker hub under <code class="docutils literal notranslate"><span class="pre">nutsfoundation/nuts-node:dev</span></code>.</p>
+<p>You can also build the development image yourself by running the following command in the root of the repository:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docker-dev
+</pre></div>
+</div>
+<p>When starting up the development image, it’ll block and requires you to authenticate with Github.
+It’ll print a URL to visit in your browser and a code to enter. After authenticating, the tunnel will be established and the Nuts Node will start.
+The container stores the last used tunnel in <code class="docutils literal notranslate"><span class="pre">/nuts/config/devtunnel/tunnel.id</span></code>.
+<code class="docutils literal notranslate"><span class="pre">/nuts/config/devtunnel/tunnel.log</span></code> contains the logs of the tunnel including the public accessible URL. This URL is also printed to the console.
+Devtunnel also stores some session information in <code class="docutils literal notranslate"><span class="pre">/nuts/DevTunnel</span></code>.</p>
+<p>To persist a tunnel URL over node restarts, mount a directory at <code class="docutils literal notranslate"><span class="pre">/nuts/config/devtunnel</span></code> (or one of its parents) inside the container.
+Mounting <code class="docutils literal notranslate"><span class="pre">/nuts</span></code> would also persist the current Github session over container restarts.</p>
+<p>For trouble shooting devtunnel issues, see the <a class="reference external" href="https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/">documentation</a> and tunnel usage <a class="reference external" href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#dev-tunnels-limits">limits</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="certificates.html" class="btn btn-neutral float-left" title="Certificates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="storage.html" class="btn btn-neutral float-right" title="Storage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

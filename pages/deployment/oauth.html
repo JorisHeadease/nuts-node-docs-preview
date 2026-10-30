@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OAuth2 Profile &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Security Considerations" href="security-considerations.html" />
+    <link rel="prev" title="Audit Logging" href="audit-logging.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OAuth2 Profile</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#authorization-code-flow">Authorization Code Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vp-token-grant-type">VP Token Grant Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">OpenID4VCI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dpop">DPoP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">StatusList2021</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OAuth2 Profile</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/oauth.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="oauth2-profile">
+<span id="oauth-profile"></span><h1>OAuth2 Profile<a class="headerlink" href="#oauth2-profile" title="Link to this heading"></a></h1>
+<p>This page describes the OAuth2 related RFCs and where they are implemented.
+The Nuts node implements (parts of) the following RFCs:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc6749">RFC 6749</a> - The OAuth 2.0 Authorization Framework</p></li>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7636">RFC 7636</a> - Proof Key for Code Exchange by OAuth Public Clients</p></li>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc7662">RFC 7662</a> - OAuth 2.0 Token Introspection</p></li>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc8414">RFC 8414</a> - OAuth 2.0 Authorization Server Metadata</p></li>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc9101">RFC 9101</a> - The OAuth 2.0 Authorization Framework: JWT-Secured Authorization Request (JAR)</p></li>
+<li><p><a class="reference external" href="https://tools.ietf.org/html/rfc9449">RFC 9449</a> - OAuth 2.0 Demonstrating Proof of Possession (DPoP)</p></li>
+<li><p><a class="reference external" href="https://nuts-foundation.gitbook.io/drafts/rfc/rfc021-vp_token-grant-type">Nuts RFC021</a> - RFC021 VP Token Grant Type</p></li>
+<li><p><a class="reference external" href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html">OpenID4VP</a> - OpenID for Verifiable Presentations - draft 20</p></li>
+<li><p><a class="reference external" href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html">OpenID4VCI</a> - OpenID for Verifiable Credential Issuance 1.0 (ID-1)</p></li>
+<li><p><a class="reference external" href="https://www.w3.org/community/reports/credentials/CG-FINAL-vc-status-list-2021-20230102/">StatusList2021</a> - Status List 2021</p></li>
+<li><p><a class="reference external" href="https://identity.foundation/presentation-exchange/">Presentation Exchange</a> - Presentation Exchange</p></li>
+</ul>
+<p>There are two different flows implemented in the Nuts node to get an access token: Authorization Code Flow using OpenID4VP and the VP Token Grant type.</p>
+<section id="authorization-code-flow">
+<h2>Authorization Code Flow<a class="headerlink" href="#authorization-code-flow" title="Link to this heading"></a></h2>
+<p>For the authorization code flow, the Nuts node implements the following:</p>
+<ul class="simple">
+<li><p>JAR (JWT Secured Authorization Request) for both the initial authorization request as well as the OpenID4VP authorization request.
+All request use the <code class="docutils literal notranslate"><span class="pre">request_uri</span></code> parameter meaning that other request parameters cannot be inspected in the authorization request itself.</p></li>
+<li><p>PKCE (Proof Key for Code Exchange) for the authorization code flow. The call of the initial authorization request is linked to the token request.</p></li>
+<li><p>DPoP (Demonstrating Proof of Possession) for the token request. Each resources request will require a new DPoP Proof header.
+The resource server is also required to check this header in an additional step after the token introspection.</p></li>
+<li><p>OpenID4VP for providing the VP token to the authorization server.</p></li>
+</ul>
+<p>Both JAR and PKCE are mandatory. DPoP is optional, usage is determined by the client.
+The Nuts node will do this automatically as client and authorization server.</p>
+</section>
+<section id="vp-token-grant-type">
+<h2>VP Token Grant Type<a class="headerlink" href="#vp-token-grant-type" title="Link to this heading"></a></h2>
+<p>The VP Token Grant Type is a new grant type that allows a client to request an access token using a verifiable presentation token.
+It is a custom grant type that bypasses user interaction and allows a client to request an access token directly from the Nuts node.</p>
+<p>The Nuts node implements the following:</p>
+<ul class="simple">
+<li><p>RFC021 VP Token Grant Type for the token request.</p></li>
+<li><p>DPoP (Demonstrating Proof of Possession) for the token request. Each resources request will require a new DPoP Proof header.
+The resources server is also required to check this header in an additional step after the token introspection.</p></li>
+</ul>
+<p>DPoP is optional, usage is determined by the client.</p>
+</section>
+<section id="id1">
+<h2>OpenID4VCI<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>The Nuts node implements the OpenID for Verifiable Credential Issuance 1.0 wallet flow.
+On behalf of a user, the node requests a Verifiable Credential from a remote Credential Issuer over the Authorization Code Flow:</p>
+<ul class="simple">
+<li><p>Authorization Request with <code class="docutils literal notranslate"><span class="pre">authorization_details</span></code> of type <code class="docutils literal notranslate"><span class="pre">openid_credential</span></code> (RFC 9396 / OpenID4VCI §5.1.1).</p></li>
+<li><p>PKCE for the authorization code, as in the OpenID4VP flow.</p></li>
+<li><p>Token Response with <code class="docutils literal notranslate"><span class="pre">credential_identifiers</span></code> per the requested <code class="docutils literal notranslate"><span class="pre">credential_configuration_id</span></code> (§6.2 and §3.3.4).</p></li>
+<li><p>Nonce Endpoint to obtain a fresh <code class="docutils literal notranslate"><span class="pre">c_nonce</span></code> before requesting a Credential (§7).</p></li>
+<li><p>Credential Request with a key proof JWT bound to the holder’s DID (Appendix F.1).</p></li>
+<li><p>On an <code class="docutils literal notranslate"><span class="pre">invalid_nonce</span></code> response, the wallet fetches a fresh <code class="docutils literal notranslate"><span class="pre">c_nonce</span></code> and retries the Credential Request once (§8.3.1.2 prescribes fetching a new <code class="docutils literal notranslate"><span class="pre">c_nonce</span></code>; retrying once is local policy).</p></li>
+</ul>
+<p>The relevant API:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/internal/auth/v2/{subjectID}/request-credential</span></code></p></li>
+</ul>
+<p>Not implemented:</p>
+<ul class="simple">
+<li><p>Deferred issuance (HTTP 202 with <code class="docutils literal notranslate"><span class="pre">transaction_id</span></code> / <code class="docutils literal notranslate"><span class="pre">interval</span></code>).</p></li>
+<li><p>The Notification Endpoint (§11). <code class="docutils literal notranslate"><span class="pre">notification_id</span></code> returned by the issuer is ignored.</p></li>
+<li><p>Multiple credentials per call: only a single <code class="docutils literal notranslate"><span class="pre">authorization_details</span></code> entry is accepted and only the first credential in the response is processed.</p></li>
+</ul>
+<p>Note: the unrelated internal flow in the <code class="docutils literal notranslate"><span class="pre">vcr/openid4vci</span></code> package is used by Nuts nodes to issue <code class="docutils literal notranslate"><span class="pre">NutsAuthorizationCredential</span></code> to each other over HTTP. That flow is based on a subset of OpenID4VCI draft-11 and is not a wallet implementation per §2.</p>
+</section>
+<section id="dpop">
+<h2>DPoP<a class="headerlink" href="#dpop" title="Link to this heading"></a></h2>
+<p>When the client wants to use DPoP, it must enable it in the access token request from client to Nuts node.
+If enabled the client will also need to call the Nuts node to create a new DPop Proof header for each request to the resources server.</p>
+<p>A resources server must check the type of access token used to request data. If a DPoP token is used, the resource server must verify the DPoP Proof using the hash of the public key from the introspection result.
+The Nuts node provides a convenience API to do this for you.
+Some of the calls to the Nuts node are required because it handles key material for the DPoP Proof. The keys used for the DPoP headers are taken from the DID Document of a tenant.
+More information can be found on the <a class="reference external" href="nuts-node-api">API documentation</a> page. The relevant API’s are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/internal/auth/v2/dpop/{kid}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/internal/auth/v2/dpop/validate</span></code></p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>StatusList2021<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>The revocation status of presented Verifiable Credentials that contain a <code class="docutils literal notranslate"><span class="pre">credentialStatus</span></code> with type <code class="docutils literal notranslate"><span class="pre">StatusList2021Entry</span></code> will automatically be validated.
+To issue a Verifiable Credential that can be revoked, see <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/internal/vcr/v2/issuer/vc</span></code> in the <a class="reference external" href="nuts-node-api">API documentation</a>.
+Be aware that the Nuts-node hosts a <code class="docutils literal notranslate"><span class="pre">StatusList2021Credential</span></code> with the revocation status of all issued credentials.
+This endpoint MUST be available for some time after the last VC on the list has been revoked, or until all VCs on the list have expired.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="audit-logging.html" class="btn btn-neutral float-left" title="Audit Logging" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="security-considerations.html" class="btn btn-neutral float-right" title="Security Considerations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,794 @@
+openapi: 3.0.0
+info:
+  title: Auth v2 API
+  version: 2.0.0
+  license:
+    name: GPLv3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+servers:
+  - url: http://localhost:8081
+paths:
+  /internal/auth/v2/{subjectID}/request-service-access-token:
+    post:
+      operationId: requestServiceAccessToken
+      summary: Start the authorization flow to get an access token from a remote authorization server.
+      description: |
+        Initiates an OAuth2 flow to request an access token from a remote authorization server.
+        It'll initiate a s2s (RFC021) flow.
+
+        error returns:
+        * 400 - one of the parameters has the wrong format, an OAuth error occurred, or the http client calling the authorizer returned an error due to incorrect input
+        * 412 - the organization wallet does not contain the correct credentials or doesn't support the right DID methods
+        * 502 - the authorizer returned an error
+        * 503 - the authorizer could not be reached
+      tags:
+        - auth
+      parameters:
+        - name: subjectID
+          in: path
+          required: true
+          description: Subject of the requester, a wallet owner at this node.
+          schema:
+            type: string
+            example: 90BC1AE9-752B-432F-ADC3-DD9F9C61843C
+        - name: Cache-Control
+          in: header
+          required: false
+          description: |
+            Access tokens are cached by the Nuts node, specify Cache-Control: no-cache to bypass the cache.
+            This forces the Nuts node to request a new access token from the authorizer.
+            
+            A valid use case for this is when the Resource Server rejects the access token with 401 Unauthorized.
+            It could be that the Authorization Server lost the access token due to a server restart,
+            in combination with (non-recommended) usage of in-memory session storage.
+            The local Nuts node then still considers the token valid, while the Authorization Server does not.
+            
+            Note that this should not be used under normal circumstances, as it will increase round trip time and load on both the requester and authorizer.
+          schema:
+            type: string
+            example: no-cache
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceAccessTokenRequest'
+      responses:
+        '200':
+          description: Successful request. Responds with an access token as described in rfc6749 section 5.1.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+              examples:
+                DPoP:
+                  summary: DPoP-bound access token
+                  value:
+                    access_token: "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp..sHQ"
+                    token_type: "DPoP"
+                    dpop_kid: "did:web:example.com:resource-owner#key-1"
+                    scope: "eOverdracht-sender"
+                    expires_in: 3600
+                    expires_at: 1640995200
+                Bearer:
+                  summary: Bearer access token
+                  value:
+                    access_token: "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp..sHQ"
+                    token_type: "Bearer"
+                    scope: "eOverdracht-sender"
+                    expires_in: 3600
+                    expires_at: 1640995200
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/auth/v2/{subjectID}/request-user-access-token:
+    post:
+      operationId: requestUserAccessToken
+      summary: EXPERIMENTAL Start the authorization code flow to get an access token from a remote authorization server when user context is required.
+      description: |
+        This API is still EXPERIMENTAL.  
+        Initiates an OAuth2 flow to request an access token from a remote authorization server. This call will initiate an OpenID4VP flow.
+        The user must be authorized by the calling system and provided in the preauthorized_user field.
+        The user's ID must be stable across sessions, as it's used to select the right ID Wallet.
+        
+        error returns:
+        * 400 - one of the parameters has the wrong format or an OAuth error occurred
+        * 412 - the organization wallet does not contain the correct credentials
+        * 503 - the authorizer could not be reached or returned an error
+      tags:
+        - auth
+      parameters:
+        - name: subjectID
+          in: path
+          required: true
+          description: Subject of the requester, a wallet owner at this node.
+          schema:
+            type: string
+            example: 90BC1AE9-752B-432F-ADC3-DD9F9C61843C
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAccessTokenRequest'
+      responses:
+        '200':
+          description: |
+            Successful request. Responds with a redirect_uri for the user and a token for the calling application.
+            The token can be used by the calling application to get the status of the session.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedirectResponseWithID'
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/auth/v2/{subjectID}/request-credential:
+    post:
+      operationId: requestOpenid4VCICredentialIssuance
+      summary: EXPERIMENTAL Start the Oid4VCI authorization flow.
+      description: |
+        This API is still EXPERIMENTAL.  
+        Initiates an Oid4VCI flow to request an VC from a Credential Issuer.
+
+        error returns:
+        * 400 - one of the parameters has the wrong format or an OAuth error occurred
+        * 424 - the issuer does not fulfill the right requirements to issue the requested VC(s)
+        * 412 - the organization wallet does not contain the correct credentials
+      tags:
+        - auth
+      parameters:
+        - name: subjectID
+          in: path
+          required: true
+          description: Subject ID of the wallet owner at this node.
+          schema:
+            type: string
+            example: 90BC1AE9-752B-432F-ADC3-DD9F9C61843C
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - issuer
+                - authorization_details
+                - redirect_uri
+                - wallet_did
+              properties:
+                wallet_did:
+                  type: string
+                  description: The DID to which the Verifiable Credential must be issued. Must be owned by the given subject.
+                  example: did:web:example.com
+                issuer:
+                  type: string
+                  description: |
+                    The OAuth Authorization Server's identifier, that issues the Verifiable Credentials, as specified in RFC 8414 (section 2),
+                    used to locate the OAuth2 Authorization Server metadata.
+                  example: did:web:issuer.example.com
+                authorization_details:
+                  description: |
+                    Authorization details per RFC 9396 / OpenID4VCI 1.0 §5.1.1.
+                    The current implementation processes a single credential
+                    issuance per call and only consumes the first entry.
+                  type: array
+                  minItems: 1
+                  maxItems: 1
+                  items:
+                    $ref: '#/components/schemas/AuthorizationDetail'
+                credential_request_params:
+                  type: object
+                  additionalProperties: true
+                  description: |
+                    Optional JSON object overlaid on top of the OpenID4VCI Credential Request body sent to
+                    the issuer's credential endpoint. Any field supplied here overrides the node's default —
+                    including credential_configuration_id, credential_identifier and proofs. Use this for
+                    issuers that diverge from the OpenID4VCI 1.0 Credential Request shape; the caller is
+                    responsible for the resulting wire shape (§8.2 mutual exclusivity, proof binding, etc.).
+                  example: |
+                    {
+                      "some-requested-credential-attribute": "900184590"
+                    }
+                authorization_request_params:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: |
+                    Optional key/value pairs added to the OpenID4VCI authorization request (the redirect to the
+                    Authorization Server's authorization_endpoint). These may only add parameters; they must not
+                    override the OpenID4VCI parameters set by the node (the request is rejected if they do).
+                    Prefer authorization_details (RFC 9396) where the issuer supports it; use this only for issuers
+                    that require non-standard authorization parameters (e.g. auth_method for AET smartcards).
+                  example: |
+                    {
+                      "auth_method": "SmartCard"
+                    }
+                redirect_uri:
+                  type: string
+                  description: |
+                    The URL to which the user-agent will be redirected after the authorization request.
+                  example: https://my-xis.example.com/callback
+      responses:
+        '200':
+          description: |
+            Successful request. Responds with a redirect_uri for the user and a session_id for correlation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedirectResponse'
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/auth/v2/accesstoken/{sessionID}:
+    get:
+      operationId: retrieveAccessToken
+      summary: Get the access token from the Nuts node that was requested through /request-user-access-token.
+      description: |
+        If the OAuth2 flow has completed, this call will return the access token. 
+        After returning the access token, the token used to retrieve the access token is no longer valid.
+        If the flow hasn't completed yet, the response will contain the 'pending' status value.
+        Therefore this API can be used to poll for the status of the OAuth2 flow.
+      tags:
+        - auth
+      parameters:
+        - name: sessionID
+          in: path
+          required: true
+          description: This ID is given to the calling application as response to the request-user-access-token call.
+          schema:
+            type: string
+            example: eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp
+      responses:
+        '200':
+          description: |
+            Successful request. Responds with an access token as described in rfc6749 section 5.1 when available.
+            If the OAuth2 flow hasn't completed yet, the response will only contain the 'pending' status value.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+              examples:
+                DPoP:
+                  summary: DPoP-bound access token
+                  value:
+                    access_token: "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp..sHQ"
+                    token_type: "DPoP"
+                    dpop_kid: "did:web:example.com:resource-owner#key-1"
+                    scope: "eOverdracht-sender"
+                    expires_in: 3600
+                    expires_at: 1640995200
+                    status: "active"
+                Bearer:
+                  summary: Bearer access token
+                  value:
+                    access_token: "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp..sHQ"
+                    token_type: "Bearer"
+                    scope: "eOverdracht-sender"
+                    expires_in: 3600
+                    expires_at: 1640995200
+                    status: "active"
+                pending:
+                  summary: Flow not yet completed
+                  value:
+                    access_token: ""
+                    token_type: ""
+                    status: "pending"
+        default:
+          $ref: '../common/error_response.yaml'
+  /internal/auth/v2/accesstoken/introspect:
+    post:
+      operationId: introspectAccessToken
+      summary: |
+        Introspection endpoint to retrieve information from an Access Token as described by RFC7662.
+        It returns fields derived from the credentials that were used during authentication.
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TokenIntrospectionRequest"
+      responses:
+        '200':
+          description: |
+            An Introspection response as described in RFC7662 section 2.2.
+            The 'active' field indicates whether the token should be considered valid or not.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenIntrospectionResponse"
+        '401':
+          description: |
+            This is returned when an OAuth2 Client is unauthorized to talk to the introspection endpoint.
+            Note: introspection of an invalid or malformed token returns a 200 where with field 'active'=false
+  /internal/auth/v2/accesstoken/introspect_extended:
+    post:
+      operationId: introspectAccessTokenExtended
+      summary: |
+        Introspection endpoint to retrieve information from an Access Token as described by RFC7662.
+        It returns the same information as the non-extended API call, but with the Presentation Definitions,
+        Presentation Submissions and Verifiable Presentations added.
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TokenIntrospectionRequest"
+      responses:
+        '200':
+          description: |
+            An Introspection response as described in RFC7662 section 2.2.
+            The 'active' field indicates whether the token should be considered valid or not.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtendedTokenIntrospectionResponse"
+        '401':
+          description: |
+            This is returned when an OAuth2 Client is unauthorized to talk to the introspection endpoint.
+            Note: introspection of an invalid or malformed token returns a 200 where with field 'active'=false
+  /internal/auth/v2/dpop/{kid}:
+    post:
+      operationId: createDPoPProof
+      summary: Create a DPoP proof as specified by RFC9449 for a given access token. It is to be used as HTTP header when accessing resources.
+      tags:
+        - auth
+      parameters:
+        - name: kid
+          in: path
+          required: true
+          description: The kid used to create the DPoP proof returned by the access token request.
+          # we use the content hack so no unescaping happens in the generated code. This way we can handle web:did keys with port numbers.
+          content:
+            plain/text:
+              schema:
+                type: string
+                example: did:web:example.com#1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DPoPRequest"
+      responses:
+        '200':
+          description: A response containing the DPoP proof as specified by RFC9449
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DPoPResponse"
+        '401':
+          description: This is returned when an OAuth2 Client is unauthorized to talk to the DPoP endpoint.
+  /internal/auth/v2/dpop/validate:
+    post:
+      operationId: validateDPoPProof
+      summary: Handle some of the validation of a DPoP proof as specified by RFC9449.
+      description: |
+        Handle some of the validation of a DPoP proof as specified by RFC9449.
+        Full validation as specified by RFC9449 is the responsibility of the resource server.
+        This is a convenience API where the the following is validated:
+        * The DPoP proof is a valid JWT
+        * The http method in the DPoP proof is the same as the http method in the request
+        * The URL in the DPoP proof is the same as the URL in the request (fragment and query parameters are ignored)
+        * The thumbprint given (returned from token introspection) is the same as the thumbprint of the public key used to sign the DPoP proof
+        * The ath field in the DPoP proof matches the hash of the access token
+        * The jti field in the DPoP proof is unique
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DPoPValidateRequest"
+      responses:
+        '200':
+          description: A response containing the validity of the DPoP proof header for the access token and HTTP request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DPoPValidateResponse"
+        default:
+          $ref: '../common/error_response.yaml'
+components:
+  schemas:
+    cnf:
+      description: The 'confirmation' claim is used in JWTs to proof the possession of a key.
+      required:
+        - jkt
+      properties:
+        jkt:
+          type: string
+          description: JWK thumbprint
+          example: "0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I"
+    DPoPRequest:
+      type: object
+      required:
+        - htm
+        - token
+        - htu
+      properties:
+        htm:
+          type: string
+          description: The HTTP method for which the DPoP proof is requested.
+          example: "POST"
+        token:
+          type: string
+          description: The access token for which the DPoP proof is requested.
+          example: "eyJhbGciOi"
+        htu:
+          type: string
+          description: The URL for which the DPoP proof is requested. Query params and fragments are ignored during validation.
+          example: "https://example.com/resource"
+    DPoPResponse:
+      type: object
+      required:
+        - dpop
+      properties:
+        dpop:
+          type: string
+          description: The DPoP proof as specified by https://datatracker.ietf.org/doc/html/rfc9449 for resource requests
+          example: "eyJhbGciOiJFUzI1NiIsInR5cCI6ImRwb3Arand..lgtla"
+    DPoPValidateRequest:
+      type: object
+      required:
+        - dpop_proof
+        - method
+        - thumbprint
+        - token
+        - url
+      properties:
+        dpop_proof:
+          type: string
+          description: The DPoP Proof as specified by https://datatracker.ietf.org/doc/html/rfc9449 for resource requests
+          example: "eyJhbGciOi..lgtla"
+        method:
+          type: string
+          description: The HTTP method against which the DPoP proof is validated.
+          example: "POST"
+        thumbprint:
+          type: string
+          description: The thumbprint of the public key used to sign the DPoP proof. Base64url encoded, no padding.
+          example: "jlkhnp87453slfhansdhf"
+        token:
+          type: string
+          description: The access token against which the DPoP proof is validated.
+          example: "eyJhbGciOi"
+        url:
+          type: string
+          description: The URL against which the DPoP proof is validated. Query params and fragments are ignored during validation.
+          example: "https://example.com/resource"
+    DPoPValidateResponse:
+      type: object
+      required:
+        - valid
+      properties:
+        reason:
+          type: string
+          description: The reason why the DPoP Proof header is invalid.
+          example: "DPoP proof is expired"
+        valid:
+          type: boolean
+          description: True if the DPoP Proof header is valid for the access token and HTTP request, false if it is not.
+    ServiceAccessTokenRequest:
+      type: object
+      description: Request for an access token for a service.
+      required:
+        - authorization_server
+        - scope
+      properties:
+        authorization_server:
+          description: |
+            The OAuth Authorization Server's identifier as specified in RFC 8414 (section 2),
+            used to locate the OAuth2 Authorization Server metadata.
+          type: string
+          example: https://example.com/oauth2
+        scope:
+          type: string
+          description: The scope that will be the service for which this access token can be used.
+          example: eOverdracht-sender
+        credentials:
+          type: array
+          description: |
+            Additional credentials to present (if required by the authorizer), in addition to those in the requester's wallet.
+            They must be in the form of a Verifiable Credential in JSON form.
+            The serialized form (JWT or JSON-LD) in the resulting Verifiable Presentation depends on the capability of the authorizing party.
+            A typical use case is to provide a self-attested credential to convey information about the user that initiated the request.
+            
+            The following credential fields are automatically filled (when not present), and may be omitted:
+            - issuer, credentialSubject.id (MUST be omitted; filled with the DID of the requester)
+            - issuanceDate (filled with the current date/time)
+            - id (filled with a UUID)
+            - proof/signature (MUST be omitted; integrity protection is covered by the VP's proof/signature)
+          items:
+            $ref: '#/components/schemas/VerifiableCredential'
+          example: [
+            {
+              "@context": [
+                "https://www.w3.org/2018/credentials/v1",
+                "https://nuts.nl/credentials/v1"
+              ],
+              "type": ["VerifiableCredential", "NutsEmployeeCredential"],
+              "credentialSubject": {
+                "name": "John Doe",
+                "roleName": "Janitor",
+                "identifier": "123456"
+              }
+            }
+          ]
+        credential_selection:
+          type: object
+          description: |
+            Optional key-value mapping for credential selection when the wallet contains multiple
+            credentials matching a single input descriptor. Each key must match a field ID declared
+            in the Presentation Definition's input descriptor constraints. The value narrows the
+            match to credentials where that field equals the given value.
+
+            The selection must narrow to exactly one credential per input descriptor.
+            Zero matches or multiple matches will result in an error.
+
+            When omitted and multiple credentials match an input descriptor,
+            the first matching credential is used.
+          additionalProperties:
+            type: string
+          example:
+            patient_id: "123456789"
+        token_type:
+          type: string
+          description: "The type of access token that is preferred, default: DPoP"
+          default: DPoP
+          enum: [ Bearer, DPoP ]
+        service_provider_subject_id:
+          type: string
+          description: |
+            **Experimental.** Nuts subject identifier of the OAuth client (service provider).
+            When present, the node uses the RFC 7523 jwt-bearer two-VP token request flow:
+            VP1 is built from the wallet identified by the path-param `subjectID` (the healthcare
+            provider) using the `organization` PD; VP2 is built from the wallet identified here
+            using the `service_provider` PD. Requires `auth.experimental.jwtbearerclient = true`,
+            an authorization server that advertises `urn:ietf:params:oauth:grant-type:jwt-bearer`,
+            and a `service_provider` PD configured for the requested credential profile.
+
+            When omitted, the existing single-VP `vp_token-bearer` flow runs unchanged.
+
+            Subject to change without notice.
+          example: acme-service-provider
+    UserAccessTokenRequest:
+      type: object
+      description: Request for an access token for a user.
+      required:
+        - authorization_server
+        - redirect_uri
+        - scope
+      properties:
+        authorization_server:
+          description: |
+            The OAuth Authorization Server's identifier as specified in RFC 8414 (section 2),
+            used to locate the OAuth2 Authorization Server metadata.
+          type: string
+          example: https://example.com/oauth2
+        scope:
+          type: string
+          description: The scope that will be the service for which this access token can be used.
+          example: eOverdracht-sender
+        token_type:
+          type: string
+          description: "The type of access token that is prefered. Supported values: [Bearer, DPoP], default: DPoP"
+          enum:
+            - Bearer
+            - DPoP
+        redirect_uri:
+          type: string
+          description: |
+            The URL to which the user-agent will be redirected after the authorization request.
+            This is the URL of the calling application. 
+            The OAuth2 flow will finish at the /callback URL of the node and the node will redirect the user to this redirect_uri.
+        preauthorized_user:
+          $ref: '#/components/schemas/UserDetails'
+    VerifiablePresentation:
+      $ref: '../common/ssi_types.yaml#/components/schemas/VerifiablePresentation'
+    RedirectResponse:
+      type: object
+      required:
+        - redirect_uri
+      properties:
+        redirect_uri:
+          type: string
+          description: |
+            The URL to which the user-agent will be redirected after the authorization request.
+          example: "https://example.com/callback"
+    RedirectResponseWithID:
+      type: object
+      required:
+        - redirect_uri
+        - session_id
+      properties:
+        redirect_uri:
+          type: string
+          description: The URL to which the user-agent will be redirected after the authorization request.
+          example: "https://example.com/callback"
+        session_id:
+          type: string
+          description: The session ID that can be used to retrieve the access token by the calling application.
+          example: "eyJhbGciOiJSUzI1NiIsI"
+    UserDetails:
+      type: object
+      description: |
+        Claims about the authorized user.
+      required:
+        - name
+        - id
+        - role
+      properties:
+        name:
+          type: string
+          description: Human-readable name of the user.
+          example: "John Doe"
+        id:
+          type: string
+          description: Machine-readable identifier, uniquely identifying the user in the issuing system. The format is not specified; it could be a username, email address, employee number, etc.
+          example: "jdoe@example.com"
+        role:
+          type: string
+          description: Role of the user.
+          example: "Verpleegkundige niveau 4"
+    VerifiableCredential:
+      $ref: '../common/ssi_types.yaml#/components/schemas/VerifiableCredential'
+    TokenResponse:
+      type: object
+      description: |
+        Token Responses are made as defined in (RFC6749)[https://datatracker.ietf.org/doc/html/rfc6749#section-5.1].
+        With an additional field 'expires_at' used for cached tokens to recalculate 'expires_in'.
+        The field 'dpop_kid' is added from (RFC9449)[https://datatracker.ietf.org/doc/html/rfc9449].
+      required:
+        - access_token
+        - token_type
+      properties:
+        access_token:
+          type: string
+          description: |
+            The access token issued by the authorization server.
+          example: "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikp..sHQ"
+        dpop_kid:
+          type: string
+          description: |
+            The kid of the DPoP key that is used to sign dpop headers.
+          example: "did:web:example.com:resource-owner#key-1"
+        token_type:
+          type: string
+          description: |
+            The type of the token issued as described in [RFC6749].
+          example: "Bearer"
+        scope:
+          type: string
+          example: "eOverdracht-sender"
+        status:
+          type: string
+          description: |
+            The status of the access token request. Can be 'pending' or 'active'.
+            If the status is 'pending', the access token is not yet available.
+            Only used when the access token is requested through /request-user-access-token.
+          enum: [ pending, active ]
+          example: "active"
+        expires_in:
+          type: integer
+          description: |
+            The lifetime in seconds of the access token.
+          example: 3600
+        expires_at:
+          type: integer
+          description: |
+              The expiration time of the access token in seconds since UNIX epoch.
+          example: 1640995200
+    PresentationDefinition:
+      description: |
+        A presentation definition is a JSON object that describes the desired verifiable credentials and presentation formats.
+        Specified at https://identity.foundation/presentation-exchange/spec/v2.0.0/
+      type: object
+    PresentationSubmission:
+      description: |
+        A presentation submission is a JSON object that describes the mapping between the required verifiable credentials listed in the presentation definition and the supplied verifiable presentation.
+        Specified at https://identity.foundation/presentation-exchange/spec/v2.0.0/
+      type: object
+    TokenIntrospectionRequest:
+      description: >
+        Token introspection request as described in RFC7662 section 2.1
+
+        Alongside the defined properties, it can return values (additionalProperties) from the Verifiable Credentials that resulted from the Presentation Exchange.
+      required:
+        - token
+      properties:
+        token:
+          type: string
+      example: token=spnhVHZ4IFVvuNrpflVaB1A7P3A2xZ7G_a8gF_SHMynYSA
+    TokenIntrospectionResponse:
+      description: Token introspection response as described in RFC7662 section 2.2
+      required:
+        - active
+      additionalProperties: { }
+      properties:
+        active:
+          type: boolean
+          description: True if the token is active, false if the token is expired, malformed etc. Required per RFC7662
+        cnf:
+          $ref: '#/components/schemas/cnf'
+        iss:
+          type: string
+          description: Issuer URL of the authorizer.
+          example: https://example.com/oauth2/authorizer
+        aud:
+          type: string
+          description: RFC7662 - Service-specific string identifier or list of string identifiers representing the intended audience for this token, as defined in JWT [RFC7519].
+          example: "https://target_token_endpoint"
+        client_id:
+          type: string
+          description: The client identity the access token was issued to. Since the Verifiable Presentation is used to grant access, the client_id reflects the client_id in the access token request.
+          example: https://example.com/oauth2/client
+        exp:
+          type: integer
+          description: Expiration date in seconds since UNIX epoch
+          example: 1735689600
+        iat:
+          type: integer
+          description: Issuance time in seconds since UNIX epoch
+          example: 1735686000
+        scope:
+          type: string
+          description: Granted scopes, as a space-separated list.
+          example: "medicatieoverdracht patient/MedicationRequest.read"
+    ExtendedTokenIntrospectionResponse:
+      allOf:
+        - $ref: '#/components/schemas/TokenIntrospectionResponse'
+        - properties:
+            presentation_definitions:
+              $ref: '#/components/schemas/RequiredPresentationDefinitions'
+            presentation_submissions:
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/PresentationSubmission'
+              description: |
+                Mapping of Presentation Definition IDs that were fulfilled to Presentation Submissions.
+            vps:
+              type: array
+              items:
+                $ref: '#/components/schemas/VerifiablePresentation'
+    RequiredPresentationDefinitions:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/PresentationDefinition'
+      description: |
+        Presentation Definitions, as described in Presentation Exchange specification, fulfilled to obtain the access token
+        The map key is the wallet owner (user/organization)
+    AuthorizationDetail:
+      description: |
+        A single authorization_details entry per RFC 9396 / OpenID4VCI 1.0 §5.1.1.
+        Only the fields used by the user/browser issuance flow are modeled.
+      type: object
+      required:
+        - type
+        - credential_configuration_id
+      properties:
+        type:
+          type: string
+          enum: [openid_credential]
+          description: |
+            The authorization details type. For OpenID4VCI flows this MUST
+            be "openid_credential" per §5.1.1.
+        credential_configuration_id:
+          type: string
+          description: |
+            References a credential configuration from the issuer's
+            credential_configurations_supported metadata. REQUIRED for
+            type=openid_credential per §5.1.1.
+        format:
+          type: string
+          description: |
+            Optional credential format hint (e.g. "vc+sd-jwt").
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: Bearer
+
+security:
+  - { }
+  - jwtBearerAuth: [ ]

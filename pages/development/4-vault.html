@@ -1,0 +1,181 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development with Vault &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Contribute" href="../contribute.html" />
+    <link rel="prev" title="API development" href="3-api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3-api.html">API development</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Development with Vault</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/development/4-vault.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <blockquote>
+<div></div></blockquote>
+<section id="development-with-vault">
+<span id="vault-dev"></span><h1>Development with Vault<a class="headerlink" href="#development-with-vault" title="Link to this heading"></a></h1>
+<p>You can start a development Vault server as follows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--cap-add<span class="o">=</span>IPC_LOCK<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">8200</span>:8200<span class="w"> </span><span class="se">\</span>
+-e<span class="w"> </span><span class="s1">'VAULT_DEV_ROOT_TOKEN_ID=unsafe'</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">'VAULT_ADDRESS=http://localhost:8200'</span><span class="w"> </span><span class="se">\</span>
+--name<span class="o">=</span>dev-vault<span class="w"> </span><span class="se">\</span>
+vault
+</pre></div>
+</div>
+<p>The server will start unsealed, with root token <code class="docutils literal notranslate"><span class="pre">unsafe</span></code>.</p>
+<p>Now log in and enable a key-value secret engine named <code class="docutils literal notranslate"><span class="pre">kv</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">'VAULT_ADDR=http://0.0.0.0:8200'</span><span class="w"> </span>dev-vault<span class="w"> </span>vault<span class="w"> </span>login
+</pre></div>
+</div>
+<p>Enter the root token <code class="docutils literal notranslate"><span class="pre">unsafe</span></code>, then enable the <code class="docutils literal notranslate"><span class="pre">kv</span></code> engine:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">'VAULT_ADDR=http://0.0.0.0:8200'</span><span class="w"> </span>dev-vault<span class="w"> </span>vault<span class="w"> </span>secrets<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>-path<span class="o">=</span>kv<span class="w"> </span>kv
+</pre></div>
+</div>
+<p>Then configure the Nuts node to use the Vault server:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">crypto</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">storage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vaultkv</span>
+<span class="w">  </span><span class="nt">vault</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:8200</span>
+<span class="w">    </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unsafe</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="3-api.html" class="btn btn-neutral float-left" title="API development" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contribute.html" class="btn btn-neutral float-right" title="Contribute" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

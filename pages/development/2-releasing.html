@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Releasing Nuts Node &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="API development" href="3-api.html" />
+    <link rel="prev" title="Nuts node development" href="1-development.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="1-development.html">Nuts node development</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Releasing Nuts Node</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#semantic-versioning">Semantic versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#major-release">Major release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bugfix-release-patches">Bugfix release/patches</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#backports">Backports</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#building-a-release">Building a release</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#major-minor-version-updates">Major/Minor version updates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Releasing Nuts Node</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/development/2-releasing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="releasing-nuts-node">
+<span id="id1"></span><h1>Releasing Nuts Node<a class="headerlink" href="#releasing-nuts-node" title="Link to this heading"></a></h1>
+<section id="semantic-versioning">
+<h2>Semantic versioning<a class="headerlink" href="#semantic-versioning" title="Link to this heading"></a></h2>
+<p>Nuts Node and auxiliary tools/applications follow a semantic versioning scheme (<code class="docutils literal notranslate"><span class="pre">&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;(-rc.&lt;rc&gt;)</span></code>):</p>
+<div class="line-block">
+<div class="line">Given a version number MAJOR.MINOR.PATCH, increment the:</div>
+<div class="line"><br /></div>
+<div class="line-block">
+<div class="line">1. MAJOR version when you make incompatible API changes,</div>
+<div class="line">2. MINOR version when you add functionality in a backwards compatible manner, or</div>
+<div class="line">3. PATCH version when you make backwards compatible bug fixes.</div>
+</div>
+</div>
+<p>(Taken from <a class="reference external" href="https://semver.org/">semver.org</a>)</p>
+<blockquote>
+<div><p>Note: “API” is a broad term, it covers every interface interacted with by applications or other nodes (including Nuts network protocols).</p>
+</div></blockquote>
+<p>When a new minor or major version is released, always create a release candidate first: <code class="docutils literal notranslate"><span class="pre">&lt;major&gt;.&lt;minor&gt;.0-rc.1</span></code>, eg: <code class="docutils literal notranslate"><span class="pre">v5.1.0-rc.1</span></code>.
+This version will symbolize a feature freeze and will be used for the first tests.
+All problems will be fixed and the release candidate version is increased on every bugfix release, eg: <code class="docutils literal notranslate"><span class="pre">v5.1.0-rc.2</span></code>.
+When no more problems are found the major/minor version is released without a <code class="docutils literal notranslate"><span class="pre">-rc.&lt;rc&gt;</span></code> postfix.
+This approach prevents the docker <code class="docutils literal notranslate"><span class="pre">latest</span></code> tags to be updated to a new version automatically.</p>
+<p>Aside from the Nuts Node itself, all projects that follow the same versions need to be released.
+They follow the major version from the Nuts Node, but minor and patch versions may differ.</p>
+</section>
+<section id="major-release">
+<h2>Major release<a class="headerlink" href="#major-release" title="Link to this heading"></a></h2>
+<p>A major release starts with version number <code class="docutils literal notranslate"><span class="pre">&lt;major&gt;.0.0</span></code>. Every Nuts Node release has a name (e.g. “Brazil”) and a version number.
+A release consists of a Git tag and a release in Github with release notes. Releases are created according to the following format:</p>
+<ul class="simple">
+<li><p>Git tag: <code class="docutils literal notranslate"><span class="pre">v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">v2.0.0</span></code></p></li>
+<li><p>Release name: <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;</span> <span class="pre">release</span> <span class="pre">(&lt;version&gt;)</span></code>, e.g.: <code class="docutils literal notranslate"><span class="pre">Brazil</span> <span class="pre">release</span> <span class="pre">(v2.0.0)</span></code> (every release has a designated name)</p></li>
+<li><p>Release notes: auto-generated by Github.</p></li>
+</ul>
+</section>
+<section id="bugfix-release-patches">
+<h2>Bugfix release/patches<a class="headerlink" href="#bugfix-release-patches" title="Link to this heading"></a></h2>
+<p>When an issue is fixed in a released version a bugfix/patch version must be released.
+The bug must be fixed on a branch named after the major version, e.g. <code class="docutils literal notranslate"><span class="pre">v1</span></code> or <code class="docutils literal notranslate"><span class="pre">v2</span></code>.
+The release name follows the release name, but is named “bugfix” instead of “release”. E.g.: <code class="docutils literal notranslate"><span class="pre">Brazil</span> <span class="pre">bugfix</span> <span class="pre">(v2.0.1)</span></code>.</p>
+<section id="backports">
+<h3>Backports<a class="headerlink" href="#backports" title="Link to this heading"></a></h3>
+<p>Bugfixes often need to be backported, e.g. it’s fixed on the <code class="docutils literal notranslate"><span class="pre">master</span></code> branch but also need to be fixed in the last version,
+and maybe even in the before last version. Bugfix releases stemming from backports follow the same versioning and naming scheme as regular bugfix releases.</p>
+</section>
+</section>
+<section id="building-a-release">
+<h2>Building a release<a class="headerlink" href="#building-a-release" title="Link to this heading"></a></h2>
+<p>Make sure all changes are on the relevant branch.
+If it’s for an older version (backport), cherry-pick all changes that need to be included and merge them into be the correct branch (e.g., V5.4, V6.1).
+Make sure to add the release notes to the branch <em>before</em> tagging a release or it will not be visible on read-the-docs.
+For good measure, also run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">cli-docs</span></code> (requires <code class="docutils literal notranslate"><span class="pre">rst_include</span></code> python package to be installed) to make sure we didn’t forget to update the documentation.</p>
+<p>Go to <a class="reference external" href="https://github.com/nuts-foundation/nuts-node/releases">releases on github</a> and perform the following steps:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Draft</span> <span class="pre">new</span> <span class="pre">release</span></code></p></li>
+<li><p>set the target branch</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">a</span> <span class="pre">tag</span></code> and create a new one according to git tag convention above (e.g. v6.1.0)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Generate</span> <span class="pre">release</span> <span class="pre">notes</span></code></p></li>
+<li><p>(optional) curate release text. For major/minor versions probably replace with the release notes written for read the docs.</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">Set</span> <span class="pre">as</span> <span class="pre">latest</span> <span class="pre">release</span></code> checkbox as needed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Publish</span> <span class="pre">release</span></code></p></li>
+</ol>
+<p>This will trigger github actions that publish a new release to <a class="reference external" href="https://hub.docker.com/r/nutsfoundation/nuts-node/tags">Docker Hub</a>, and a message will be posted in <code class="docutils literal notranslate"><span class="pre">#releases</span></code> channel on Slack.</p>
+<section id="major-minor-version-updates">
+<h3>Major/Minor version updates<a class="headerlink" href="#major-minor-version-updates" title="Link to this heading"></a></h3>
+<p><strong>Make a new branch</strong></p>
+<p>Every new major or minor version has its own branch.
+After creating a new release, a new branch should be made based off of the git tag for the release.
+The naming convention for branches is <code class="docutils literal notranslate"><span class="pre">V&lt;major&gt;.&lt;minor&gt;</span></code>, e.g. V6.0 or V5.4. (Yes git/github tag/version uses lowercase <code class="docutils literal notranslate"><span class="pre">v</span></code>, branches use uppercase <code class="docutils literal notranslate"><span class="pre">V</span></code>, and Docker tags omit the prefix entirely since version 6.0)
+Add branch protection to the new branch on Github.</p>
+<p><strong>read the docs</strong></p>
+<p>Go to <a class="reference external" href="https://app.readthedocs.org/projects/nuts-node/">app.readthedocs.org/projects/nuts-node</a> and click on <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">Add</span> <span class="pre">version</span></code> to add the new branch to the available documentation versions on <a class="reference external" href="https://nuts-node.readthedocs.io/">nuts-node.readthedocs.io</a>.</p>
+<p><strong>Automated tests</strong></p>
+<p>Testing is automated using Github workflows.
+Some of the tests cannot handle branch patterns and require updating relevant major/minor version branches to the workflow file manually.
+The current list of files that need to be updated are:</p>
+<ul class="simple">
+<li><p><strong>Scheduled govulncheck</strong> action: <code class="docutils literal notranslate"><span class="pre">.github/workflows/govulncheck-cron-schedule.yaml</span></code>. Runs every day and sends vulnerability warnings to the <code class="docutils literal notranslate"><span class="pre">#nuts-core-team</span></code> slack channel.</p></li>
+<li><p><strong>Scheduled CodeQL</strong> action: <code class="docutils literal notranslate"><span class="pre">.github/workflows/codeql-analyisis-cron-schedule.yaml</span></code></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="1-development.html" class="btn btn-neutral float-left" title="Nuts node development" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="3-api.html" class="btn btn-neutral float-right" title="API development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

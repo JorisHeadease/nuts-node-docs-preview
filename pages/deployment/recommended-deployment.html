@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recommended Deployment &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Clustering" href="clustering.html" />
+    <link rel="prev" title="Migrating from v5 to v6" href="migration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Recommended Deployment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-landscape">System Landscape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#containers">Containers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nuts-node">Nuts Node</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#public-endpoints">Public Endpoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#optional-public-endpoints">Optional Public Endpoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#internal-endpoints">Internal Endpoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#legacy-endpoints">Legacy Endpoints</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#proxy-api-gateway">Proxy / API Gateway</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-storage">Data storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#private-key-storage">Private Key Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#production-checklist">Production Checklist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resource-requirements">Resource Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Recommended Deployment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/recommended-deployment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="recommended-deployment">
+<span id="nuts-node-recommended-deployment"></span><h1>Recommended Deployment<a class="headerlink" href="#recommended-deployment" title="Link to this heading"></a></h1>
+<p>This document describes the systems and their components involved in deploying a Nuts node in a production environment.
+The target audience are engineers that want to deploy a Nuts Node.</p>
+<p>It does not detail services and interfaces specified by use cases: those should be documented by the particular use case and should be regarded as extensions to the deployment described here.</p>
+<p>The container diagram documents the recommended way of deploying a Nuts node using the features supported by the Nuts node’s version.</p>
+<p>The diagrams are in <a class="reference external" href="https://c4model.com/">C4 model</a> notation.</p>
+<section id="system-landscape">
+<h2>System Landscape<a class="headerlink" href="#system-landscape" title="Link to this heading"></a></h2>
+<p>The diagram below depicts the actors that interact with the Nuts node of the local party.</p>
+<img alt="../../_images/deployment-diagram-System-Landscape-Diagram.svg" src="../../_images/deployment-diagram-System-Landscape-Diagram.svg" />
+</section>
+<section id="containers">
+<h2>Containers<a class="headerlink" href="#containers" title="Link to this heading"></a></h2>
+<p>This section details the system with involved containers (which can be native or containerized processes, physical or remote database servers).
+It lists the interfaces of the Nuts node, who uses them and how they should be secured.</p>
+<img alt="../../_images/deployment-diagram-Container-Diagram.svg" src="../../_images/deployment-diagram-Container-Diagram.svg" />
+<section id="nuts-node">
+<h3>Nuts Node<a class="headerlink" href="#nuts-node" title="Link to this heading"></a></h3>
+<p>Server that implements the Nuts specification that connects to the Nuts network. It will usually run as Docker container or Kubernetes pod.</p>
+<p>It is interacted with through HTTP by internal and external actors. Internal actors typically include:</p>
+<ul class="simple">
+<li><p>Administrative applications (e.g. customer management application in a multi-tenant environment)</p></li>
+<li><p>Ops tooling (e.g. metric collectors)</p></li>
+<li><p>Resource viewer/consumer application that wants to access protected resources at a remote party</p></li>
+</ul>
+<p>The APIs these internal actors use are on the “internal” HTTP interface, which is bound to <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8081</span></code> by default.</p>
+<p>External actors typically include:</p>
+<ul class="simple">
+<li><p>Verifiable Credential issuers, verifiers and/or wallets</p></li>
+<li><p>OAuth2 client applications (e.g. a viewer accessing a protected resource on the Resource Server)</p></li>
+</ul>
+<p>The APIs these external actors use are on the “public” HTTP interface, which is bound to <code class="docutils literal notranslate"><span class="pre">:8080</span></code> by default.</p>
+<section id="public-endpoints">
+<h4>Public Endpoints<a class="headerlink" href="#public-endpoints" title="Link to this heading"></a></h4>
+<p>This section describes HTTP endpoints that need to be reachable for third parties.
+These HTTP endpoints are available on <code class="docutils literal notranslate"><span class="pre">:8080</span></code>.</p>
+<ul>
+<li><p><strong>/iam</strong>: for resolving DID documents.</p>
+<blockquote>
+<div><p><em>Users</em>: Verifiable Credential issuers and verifiers, OAuth2 client applications (e.g. other Nuts nodes, resource viewers)</p>
+<p><em>Security</em>: HTTPS with <strong>publicly trusted</strong> server certificate (on proxy).</p>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><strong>/oauth2</strong>: for accessing OAuth2 and OpenID services. <code class="docutils literal notranslate"><span class="pre">/callback</span></code> and <code class="docutils literal notranslate"><span class="pre">/authorize</span></code> are disabled by default on the Nuts node. They can be enabled by setting <code class="docutils literal notranslate"><span class="pre">auth.authorizationendpoint.enabled</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</dt><dd><p>Use this only for experimental OpenID4VCI and OpenID4VP use cases.</p>
+<p><em>Users</em>: Verifiable Credential issuers and verifiers, OAuth2 client applications (e.g. other Nuts nodes, resource viewers)</p>
+<p><em>Security</em>: HTTPS with <strong>publicly trusted</strong> server certificate (on proxy). Monitor traffic to detect attacks.</p>
+</dd>
+</dl>
+</li>
+<li><p><strong>/.well-known</strong>: for resolving DID documents, OpenID and OAuth2 metadata</p>
+<blockquote>
+<div><p><em>Users</em>: Other Nuts nodes, Verifiable Credential issuers and verifiers.</p>
+<p><em>Security</em>: HTTPS with <strong>publicly trusted</strong> server certificate (on proxy).</p>
+</div></blockquote>
+</li>
+<li><p><strong>/statuslist</strong>: for retrieving the Verifiable Credential revocations.</p>
+<blockquote>
+<div><p><em>Users</em>: Verifiable Credential verifiers (e.g. other Nuts nodes).</p>
+<p><em>Security</em>: HTTPS with <strong>publicly trusted</strong> server certificate (on proxy).</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="optional-public-endpoints">
+<h4>Optional Public Endpoints<a class="headerlink" href="#optional-public-endpoints" title="Link to this heading"></a></h4>
+<ul>
+<li><p><strong>/discovery</strong>: for discovering server endpoints. Forward if your node is acting as a discovery service server.</p>
+<blockquote>
+<div><p><em>Users</em>: Other Nuts nodes.</p>
+<p><em>Security</em>: HTTPS with <strong>publicly trusted</strong> server certificate (on proxy).</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="internal-endpoints">
+<h4>Internal Endpoints<a class="headerlink" href="#internal-endpoints" title="Link to this heading"></a></h4>
+<p>This section describes HTTP endpoints that must only be reachable by your own applications integrating with the Nuts node.
+These endpoints are by default available on <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8081</span></code>.
+If you need to access them from another host, you can bind it to a different interface (e.g. <code class="docutils literal notranslate"><span class="pre">:8081</span></code> for all interfaces).</p>
+<ul>
+<li><p><strong>/internal</strong>: for managing everything related to DIDs, VCs and the Nuts Node itself. Very sensitive endpoints with no additional built-in security, so care should be taken that no unauthorized parties can access it.</p>
+<blockquote>
+<div><p><em>Users</em>: operators, administrative and resource owner applications.</p>
+<p><em>Security</em>: restrict access through network separation and platform authentication.</p>
+</div></blockquote>
+</li>
+<li><p><strong>/status</strong>: for inspecting the health of the server, returns <code class="docutils literal notranslate"><span class="pre">OK</span></code> if healthy.</p>
+<blockquote>
+<div><p><em>Users</em>: monitoring tooling.</p>
+<p><em>Security</em>: restrict access through network separation.</p>
+</div></blockquote>
+</li>
+<li><p><strong>/status/diagnostics</strong>: for inspecting diagnostic information of the server.</p>
+<blockquote>
+<div><p><em>Users</em>: monitoring tooling, system administrators.</p>
+<p><em>Security</em>: restrict access through network separation.</p>
+</div></blockquote>
+</li>
+<li><p><strong>/metrics</strong>: for scraping metrics in Prometheus format.</p>
+<blockquote>
+<div><p><em>Users</em>: monitoring/metrics tooling.</p>
+<p><em>Security</em>: restrict access through network separation.</p>
+</div></blockquote>
+</li>
+<li><p><strong>/health:</strong> for checking the health of the server, returns <code class="docutils literal notranslate"><span class="pre">OK</span></code> if healthy.</p>
+<blockquote>
+<div><p><em>Users</em>: Docker or Kubernetes health checks.</p>
+<p><em>Security</em>: restrict access through network separation.</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="legacy-endpoints">
+<h4>Legacy Endpoints<a class="headerlink" href="#legacy-endpoints" title="Link to this heading"></a></h4>
+<p>There are deprecated endpoints that are still supported for backwards compatibility.
+If your use case does not require <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DIDs and/or the gRPC network, you can limit/disable access to these endpoints.</p>
+<ul>
+<li><dl>
+<dt><strong>/n2n</strong> (public): for providing Nuts services to other nodes (e.g. creating access tokens).</dt><dd><p>The local node also calls other nodes on their <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> endpoint, these outgoing calls are subject to the same security requirements.
+Server-to-server credential issuance for <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DIDs also runs over this endpoint; see <a class="reference internal" href="configuration.html#node-http-services-baseurl"><span class="std std-ref">Registering node-http-services-baseurl</span></a> for how nodes discover each other’s <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> base URL.</p>
+<p><em>Users</em>: Other Nuts nodes.</p>
+<p><em>Security</em>: HTTPS with server- and client certificates (mTLS) <strong>according to network trust anchors</strong> (on proxy). Monitor traffic to detect attacks.</p>
+</dd>
+</dl>
+</li>
+<li><p><strong>/public</strong> (public): for accessing public services, e.g. IRMA authentication.</p>
+<blockquote>
+<div><p><em>Users</em>: IRMA app.</p>
+<p><em>Security</em>: HTTPS with <strong>publicly trusted</strong> server certificate (on proxy). Monitor traffic to detect attacks.</p>
+</div></blockquote>
+</li>
+<li><p><strong>gRPC</strong>: for communicating with other Nuts nodes according to the network protocol. Uses HTTP/2 on port <code class="docutils literal notranslate"><span class="pre">5555</span></code> as transport, both outbound and inbound.</p>
+<blockquote>
+<div><p><em>Users</em>: Other Nuts nodes.</p>
+<p><em>Security</em>: HTTPS with server- and client certificates (mTLS) <strong>according to network trust anchors</strong> (on proxy). This is provided by the Nuts node.</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="proxy-api-gateway">
+<h3>Proxy / API Gateway<a class="headerlink" href="#proxy-api-gateway" title="Link to this heading"></a></h3>
+<p>Process that protects and routes HTTP (specified above) to the Nuts Node.
+Typically a standalone HTTP proxy (e.g. NGINX or HAProxy) that resides in a DMZ and/or an ingress service on a cloud platform.
+It will act as TLS terminator.</p>
+<p>The Nuts Node looks for a header called <code class="docutils literal notranslate"><span class="pre">X-Forwarded-For</span></code> to determine the client IP when logging calls.
+Refer to the documentation of your proxy on how to set this header.</p>
+<p>This process can also act as API Gateway to give external parties access to the Resource Server.
+This API Gateway should then introspect the OAuth2 access token at the Nuts node and perform additional authorization checks (depending on the use case).</p>
+</section>
+<section id="data-storage">
+<h3>Data storage<a class="headerlink" href="#data-storage" title="Link to this heading"></a></h3>
+<p>Primary data storage for all persistent data other than private keys. By default, it stores data on-disk using SQLite.
+For production, MySQL or Postgres is recommended.</p>
+</section>
+<section id="private-key-storage">
+<h3>Private Key Storage<a class="headerlink" href="#private-key-storage" title="Link to this heading"></a></h3>
+<p>Creating DID documents causes private keys to be generated, which need to be safely stored so the Nuts node can access them.
+It is recommended to store them in <a class="reference external" href="https://www.vaultproject.io/">Vault</a> or other secure key store.
+Refer to the config options of the crypto engine and <a class="reference external" href="https://www.vaultproject.io/docs">Vault documentation</a> for configuring it.</p>
+</section>
+</section>
+<section id="production-checklist">
+<h2>Production Checklist<a class="headerlink" href="#production-checklist" title="Link to this heading"></a></h2>
+<p>Below is a list of items that should be addressed when running a node in production:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Reverse proxy</dt><dd><ul>
+<li><p>Use a proxy in front of the node which terminates TLS</p></li>
+<li><p>Make sure the reverse proxy sets the header configured in <code class="docutils literal notranslate"><span class="pre">http.clientipheader</span></code> (default <code class="docutils literal notranslate"><span class="pre">X-Forwarded-For</span></code>) to log correct IP addresses</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Backup Management</dt><dd><ul>
+<li><p>Make sure data is backed up (data stored in SQL and private keys)</p></li>
+<li><p>Have a tested backup/restore procedure</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Configuration</dt><dd><ul>
+<li><p>Make sure <code class="docutils literal notranslate"><span class="pre">strictmode</span></code> is enabled (default)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Security</dt><dd><ul>
+<li><dl class="simple">
+<dt>If not using <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>, prevent access to:</dt><dd><ul>
+<li><p>The gRPC endpoint (e.g. by not mapping it in Docker).</p></li>
+<li><p>The public <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> and <code class="docutils literal notranslate"><span class="pre">/public</span></code> endpoints on HTTP <code class="docutils literal notranslate"><span class="pre">:8080</span></code>. See the v5 documentation for deployments still using <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>consult general security considerations in the <a class="reference internal" href="security-considerations.html#security-considerations"><span class="std std-ref">Security Considerations</span></a> section.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="resource-requirements">
+<h2>Resource Requirements<a class="headerlink" href="#resource-requirements" title="Link to this heading"></a></h2>
+<p>The Nuts node is built to be lightweight in terms of CPU and memory usage.</p>
+<p>The minimum system for <strong>development</strong> and <strong>test</strong> are:</p>
+<ul class="simple">
+<li><p>1 CPU</p></li>
+<li><p>512 MB RAM</p></li>
+<li><p>25 GB storage</p></li>
+</ul>
+<p>Recommended system requirements for production depends on the expected load and use cases.
+It’s recommended to keep track of the system’s performance and adjust the resources accordingly.
+CPU and memory usage, and the API response times are good indicators of the system’s performance.
+Make sure the CPUs are of a decent speed, as some operations are CPU-bound.
+The exposed metrics for <code class="docutils literal notranslate"><span class="pre">process_cpu_seconds_total</span></code>, <code class="docutils literal notranslate"><span class="pre">go_gc_duration_seconds_sum</span></code> and <code class="docutils literal notranslate"><span class="pre">go_memstats_alloc_bytes</span></code> are a good starting point for monitoring CPU and memory usage.</p>
+<p>SQL storage size is influenced by:</p>
+<ul class="simple">
+<li><p>the number of DIDs created on the node</p></li>
+<li><p>the number of credentials issued or held</p></li>
+<li><p>the size (participating parties) and number of use cases</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="migration.html" class="btn btn-neutral float-left" title="Migrating from v5 to v6" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="clustering.html" class="btn btn-neutral float-right" title="Clustering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

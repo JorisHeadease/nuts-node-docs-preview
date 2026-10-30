@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Migrating from v5 to v6 &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Recommended Deployment" href="recommended-deployment.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Migrating from v5 to v6</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#provision-an-sql-database">1. Provision an SQL database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#update-the-host-and-container-references">2. Update the host and container references</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#http-interfaces">3. HTTP interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tls-termination">TLS termination</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adjust-the-config-file">4. Adjust the config file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#start-v6">5. Start v6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#check-the-startup-logs">6. Check the startup logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rolling-back">Rolling back</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-notes">Other notes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-dids-with-selfcontrol-false">Creating DIDs with <code class="docutils literal notranslate"><span class="pre">selfControl=false</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mixing-vdr-v1-and-v2-apis">Mixing VDR v1 and v2 APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#also-enabling-did-web">Also enabling <code class="docutils literal notranslate"><span class="pre">did:web</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Migrating from v5 to v6</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/migration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="migrating-from-v5-to-v6">
+<span id="nuts-node-migrations"></span><span id="nuts-node-migration"></span><h1>Migrating from v5 to v6<a class="headerlink" href="#migrating-from-v5-to-v6" title="Link to this heading"></a></h1>
+<p>Operator runbook for upgrading a v5 deployment to v6 while keeping the existing <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> setup. Work through the steps in order. If you also want to adopt <code class="docutils literal notranslate"><span class="pre">did:web</span></code> as part of the upgrade, finish the main steps first, then see <a class="reference internal" href="#also-enabling-did-web"><span class="std std-ref">Also enabling did:web</span></a>.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#provision-an-sql-database" id="id2">1. Provision an SQL database</a></p></li>
+<li><p><a class="reference internal" href="#update-the-host-and-container-references" id="id3">2. Update the host and container references</a></p></li>
+<li><p><a class="reference internal" href="#http-interfaces" id="id4">3. HTTP interfaces</a></p></li>
+<li><p><a class="reference internal" href="#adjust-the-config-file" id="id5">4. Adjust the config file</a></p></li>
+<li><p><a class="reference internal" href="#start-v6" id="id6">5. Start v6</a></p></li>
+<li><p><a class="reference internal" href="#check-the-startup-logs" id="id7">6. Check the startup logs</a></p></li>
+<li><p><a class="reference internal" href="#rolling-back" id="id8">Rolling back</a></p></li>
+<li><p><a class="reference internal" href="#other-notes" id="id9">Other notes</a></p></li>
+</ul>
+</nav>
+<section id="provision-an-sql-database">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">1. Provision an SQL database</a><a class="headerlink" href="#provision-an-sql-database" title="Link to this heading"></a></h2>
+<p>v6 requires SQL storage. Supported engines: PostgreSQL, MySQL, Microsoft SQL Server, Azure SQL, SQLite.</p>
+<p>A server-based engine (PostgreSQL, MySQL, MS SQL / Azure SQL) is recommended. SQLite is supported but discouraged: it is a single-file, single-node store, so a deployment on SQLite cannot later be moved to a high-availability setup (when supported) without migrating the database. It is acceptable for small, single-node <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>-only deployments that won’t adopt <code class="docutils literal notranslate"><span class="pre">did:web</span></code> in the near future — there the SQL state is rebuilt at startup from BBolt and the key backend, so the cost of switching engines later is low.</p>
+<p>Configure the connection string in <code class="docutils literal notranslate"><span class="pre">storage.sql.connection</span></code>. See <a class="reference internal" href="storage.html#storage-configuration"><span class="std std-ref">Storage</span></a> for the full reference.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># SQLite — supported but discouraged; acceptable for a small, single-node did:nuts-only upgrade</span>
+<span class="nt">storage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sql</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">connection</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite:file:/opt/nuts/data/sqlite.db?_pragma=foreign_keys(1)&amp;journal_mode(WAL)</span>
+</pre></div>
+</div>
+</section>
+<section id="update-the-host-and-container-references">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">2. Update the host and container references</a><a class="headerlink" href="#update-the-host-and-container-references" title="Link to this heading"></a></h2>
+<p>The v6 container runs as UID <code class="docutils literal notranslate"><span class="pre">18081</span></code> (was <code class="docutils literal notranslate"><span class="pre">root</span></code>). Before the first v6 start, on the host:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>chown<span class="w"> </span>-R<span class="w"> </span><span class="m">18081</span>:18081<span class="w"> </span>/opt/nuts/data
+</pre></div>
+</div>
+<p>Docker image tags no longer carry a <code class="docutils literal notranslate"><span class="pre">v</span></code> prefix — pull <code class="docutils literal notranslate"><span class="pre">nutsfoundation/nuts-node:6.0.0</span></code>, not <code class="docutils literal notranslate"><span class="pre">v6.0.0</span></code>.</p>
+</section>
+<section id="http-interfaces">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">3. HTTP interfaces</a><a class="headerlink" href="#http-interfaces" title="Link to this heading"></a></h2>
+<p>v5 supported flexible HTTP binding via <code class="docutils literal notranslate"><span class="pre">http.&lt;name&gt;.*</span></code> (with <code class="docutils literal notranslate"><span class="pre">http.default.*</span></code> as the default interface; operators could define additional named interfaces like <code class="docutils literal notranslate"><span class="pre">http.admin.*</span></code> bound to separate addresses). v6 replaces this with two fixed interfaces — update your reverse proxy / ingress to route accordingly:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">:8080</span></code> (<code class="docutils literal notranslate"><span class="pre">http.public.address</span></code>) — public endpoints (<code class="docutils literal notranslate"><span class="pre">/iam</span></code>, <code class="docutils literal notranslate"><span class="pre">/oauth2</span></code>, <code class="docutils literal notranslate"><span class="pre">/n2n</span></code>, <code class="docutils literal notranslate"><span class="pre">/.well-known</span></code>, …).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">127.0.0.1:8081</span></code> (<code class="docutils literal notranslate"><span class="pre">http.internal.address</span></code>) — <code class="docutils literal notranslate"><span class="pre">/internal</span></code>, <code class="docutils literal notranslate"><span class="pre">/status</span></code>, <code class="docutils literal notranslate"><span class="pre">/metrics</span></code>, <code class="docutils literal notranslate"><span class="pre">/health</span></code>. Loopback only by default; if you need to access it from another host, set <code class="docutils literal notranslate"><span class="pre">http.internal.address</span></code> to <code class="docutils literal notranslate"><span class="pre">0.0.0.0:8081</span></code> and make sure it is not accessible to unauthorized callers (firewall, network segmentation, auth).</p></li>
+</ul>
+<section id="tls-termination">
+<h3>TLS termination<a class="headerlink" href="#tls-termination" title="Link to this heading"></a></h3>
+<p>v6 can no longer terminate server-side TLS for HTTP itself. If you already run v5 behind a reverse proxy or ingress (the typical setup), no change is needed. If you relied on the node’s built-in TLS, move termination to a reverse proxy or ingress before upgrading.</p>
+<p>See <a class="reference internal" href="recommended-deployment.html#nuts-node-recommended-deployment"><span class="std std-ref">Recommended Deployment</span></a> for a reference topology.</p>
+</section>
+</section>
+<section id="adjust-the-config-file">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">4. Adjust the config file</a><a class="headerlink" href="#adjust-the-config-file" title="Link to this heading"></a></h2>
+<p>Set <code class="docutils literal notranslate"><span class="pre">didmethods</span> <span class="pre">=</span> <span class="pre">[&quot;nuts&quot;]</span></code> (unless you are also adopting <code class="docutils literal notranslate"><span class="pre">did:web</span></code> — see <a class="reference internal" href="#also-enabling-did-web"><span class="std std-ref">Also enabling did:web</span></a>). The v6 default is <code class="docutils literal notranslate"><span class="pre">[&quot;web&quot;,</span> <span class="pre">&quot;nuts&quot;]</span></code>; setting it explicitly to <code class="docutils literal notranslate"><span class="pre">[&quot;nuts&quot;]</span></code> keeps the deployment behaviour aligned with v5.</p>
+<p>Remove or rename the following:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 45.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>v5 key</p></th>
+<th class="head"><p>Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">auth.publicURL</span></code></p></td>
+<td><p>Replace with the new top-level <code class="docutils literal notranslate"><span class="pre">url</span></code> (introduced in v6).</p></td>
+</tr>
+<tr class="row-odd"><td><p>All <code class="docutils literal notranslate"><span class="pre">http.&lt;name&gt;.*</span></code> interface bindings (<code class="docutils literal notranslate"><span class="pre">http.default.address</span></code>, <code class="docutils literal notranslate"><span class="pre">http.default.tls</span></code>, <code class="docutils literal notranslate"><span class="pre">http.default.cors.origin</span></code>, and any custom-named interfaces)</p></td>
+<td><p>Remove. v6 uses fixed <code class="docutils literal notranslate"><span class="pre">http.public.address</span></code> and <code class="docutils literal notranslate"><span class="pre">http.internal.address</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>IRMA/Yivi CORS origin</p></td>
+<td><p>Move to <code class="docutils literal notranslate"><span class="pre">auth.irma.cors.origin</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">network.certfile</span></code>, <code class="docutils literal notranslate"><span class="pre">network.certkeyfile</span></code>, <code class="docutils literal notranslate"><span class="pre">network.truststorefile</span></code></p></td>
+<td><p>Rename to <code class="docutils literal notranslate"><span class="pre">tls.certfile</span></code>, <code class="docutils literal notranslate"><span class="pre">tls.certkeyfile</span></code>, <code class="docutils literal notranslate"><span class="pre">tls.truststorefile</span></code>. v6 refuses to start otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">http.internal.auth.type</span> <span class="pre">=</span> <span class="pre">token</span></code></p></td>
+<td><p>No longer accepted. Either configure <code class="docutils literal notranslate"><span class="pre">token_v2</span></code> (see <a class="reference internal" href="../integrating/api-authentication.html#nuts-node-api-authentication"><span class="std std-ref">API Authentication</span></a>) or rely on another authentication mechanism on the internal interface — reverse-proxy auth, mTLS, or network-level controls.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="start-v6">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">5. Start v6</a><a class="headerlink" href="#start-v6" title="Link to this heading"></a></h2>
+<p>Back up the v5 data directory first — see <a class="reference internal" href="#rolling-back">Rolling back</a>.</p>
+<p>Bring up the v6 node. It runs the <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> migrations on every start (self-control rewrite and history import into SQL). The migrations are idempotent, so an interrupted upgrade is safe to retry.</p>
+</section>
+<section id="check-the-startup-logs">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">6. Check the startup logs</a><a class="headerlink" href="#check-the-startup-logs" title="Link to this heading"></a></h2>
+<p>Schema migrations abort startup on failure — if the node booted, those are fine. The DID-document migrations don’t: per-DID failures (corrupted history, key resolution errors) are logged at <code class="docutils literal notranslate"><span class="pre">error</span></code> and the node keeps running with that DID missing from SQL. Grep the startup logs for <code class="docutils literal notranslate"><span class="pre">level=error</span></code> lines from the migration step.</p>
+</section>
+<section id="rolling-back">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Rolling back</a><a class="headerlink" href="#rolling-back" title="Link to this heading"></a></h2>
+<p>v6 rewrites the v5 on-disk state on first start. There is no in-place downgrade. To roll back, restore the v5 data directory from the backup you took before Step 5, then start v5. The SQL database is new in v6 and not used by v5. If you plan to retry the upgrade, wipe the SQL database first to avoid stale state.</p>
+</section>
+<section id="other-notes">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Other notes</a><a class="headerlink" href="#other-notes" title="Link to this heading"></a></h2>
+<section id="creating-dids-with-selfcontrol-false">
+<h3>Creating DIDs with <code class="docutils literal notranslate"><span class="pre">selfControl=false</span></code><a class="headerlink" href="#creating-dids-with-selfcontrol-false" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/internal/vdr/v1/did</span></code> ignores the request body in v6. The v5 vendor-controls-care-organisation pattern is gone — new DIDs are always self-controlled, and existing ones are flattened to self-control by the startup migration.</p>
+</section>
+<section id="mixing-vdr-v1-and-v2-apis">
+<h3>Mixing VDR v1 and v2 APIs<a class="headerlink" href="#mixing-vdr-v1-and-v2-apis" title="Link to this heading"></a></h3>
+<p>The v1 and v2 APIs read from different stores. Do not mix usage, or you risk data drift and stale reads. VDR v1 / DIDMan v1 are deprecated and slated for removal in a future major release.</p>
+</section>
+<section id="also-enabling-did-web">
+<span id="id1"></span><h3>Also enabling <code class="docutils literal notranslate"><span class="pre">did:web</span></code><a class="headerlink" href="#also-enabling-did-web" title="Link to this heading"></a></h3>
+<p>If you also want to support <code class="docutils literal notranslate"><span class="pre">did:web</span></code> use cases, leave <code class="docutils literal notranslate"><span class="pre">didmethods</span></code> at its default (both methods enabled) — drop the <code class="docutils literal notranslate"><span class="pre">didmethods</span> <span class="pre">=</span> <span class="pre">[&quot;nuts&quot;]</span></code> line from Step 4. The startup migration adds a <code class="docutils literal notranslate"><span class="pre">did:web</span></code> document to every existing subject; this is one-way and cannot be reversed without manually rebuilding subjects.</p>
+<p>Additional preconditions:</p>
+<ul class="simple">
+<li><p><strong>Resolve all DID document conflicts on v5 first.</strong> A conflicted <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> document imports into SQL as the replayed published history, not the merged state the v1 resolver returns. The new <code class="docutils literal notranslate"><span class="pre">did:web</span></code> is derived from the SQL view, so for any conflicted DID it will diverge from what v1 callers see. On v5, check <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/status/diagnostics</span></code>; if any are owned, list them via <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/internal/vdr/v1/did/conflicted</span></code> and resolve each one.</p></li>
+<li><p><strong>Move all DID and service management to VDR v2 before the first multi-method write.</strong> VDR v1 / DIDMan v1 writes only touch the <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> document, not the <code class="docutils literal notranslate"><span class="pre">did:web</span></code> in the same subject. Mixed use silently desynchronises the two, and the startup migrations do not repair this on later restarts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">did:web</span></code> resolution requires the public interface to be reachable at the configured <code class="docutils literal notranslate"><span class="pre">url</span></code> over HTTPS (handled by the reverse proxy from Step 3).</p></li>
+</ul>
+<p>After the first v6 start with <code class="docutils literal notranslate"><span class="pre">did:web</span></code> enabled, verify each subject contains both DIDs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/internal/vdr/v2/subject/{id}</span></code> lists both the <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> and the <code class="docutils literal notranslate"><span class="pre">did:web</span></code>.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="recommended-deployment.html" class="btn btn-neutral float-right" title="Recommended Deployment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

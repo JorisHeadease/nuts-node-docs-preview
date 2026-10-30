@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitoring &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Server CLI Command Reference" href="cli-reference.html" />
+    <link rel="prev" title="Logging" href="logging.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Monitoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#health-checks">Health checks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#status">Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#health">Health</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-diagnostics">Basic diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exported-metrics">Exported metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tracing">Tracing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-traced">What is traced</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trace-context-propagation">Trace context propagation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#known-limitations">Known limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cpu-profiling">CPU profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Monitoring</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/monitoring.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="monitoring">
+<span id="nuts-node-monitoring"></span><h1>Monitoring<a class="headerlink" href="#monitoring" title="Link to this heading"></a></h1>
+<section id="health-checks">
+<h2>Health checks<a class="headerlink" href="#health-checks" title="Link to this heading"></a></h2>
+<section id="status">
+<h3>Status<a class="headerlink" href="#status" title="Link to this heading"></a></h3>
+<p>The status endpoint check that the service has been started. It can be used as a <code class="docutils literal notranslate"><span class="pre">readiness</span> <span class="pre">probe</span></code>.
+It does not provide any information on the individual modules running as part of the executable.
+The main goal of the service is to give a YES/NO answer for if the service is running:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GET /status
+</pre></div>
+</div>
+<p>Returns an “OK” response body with status code <code class="docutils literal notranslate"><span class="pre">200</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The provided Docker containers are configured to perform this healthcheck out of the box.
+However, if the internal endpoints port (:8081) has been changed, the healthcheck will fail and Docker will mark the container as unhealthy.
+Override the default healthcheck to solve this.</p>
+</div>
+</section>
+<section id="health">
+<h3>Health<a class="headerlink" href="#health" title="Link to this heading"></a></h3>
+<p>The health endpoint provides more fine grained health checks on the Nuts node. It can be used as a <code class="docutils literal notranslate"><span class="pre">liveness</span> <span class="pre">probe</span></code>.
+It reports in a format compatible with <a class="reference external" href="https://docs.spring.io/spring-boot/docs/2.0.x/actuator-api/html/#health">Spring Boot’s Health Actuator</a>.
+The endpoint is available over HTTP:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GET /health
+</pre></div>
+</div>
+<p>Each component in the health check can have one of the statuses <code class="docutils literal notranslate"><span class="pre">UP</span></code>, <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code>, or <code class="docutils literal notranslate"><span class="pre">DOWN</span></code>.
+The overall status is determined by the lowest common denominator, so if one components is <code class="docutils literal notranslate"><span class="pre">DOWN</span></code>, the overall system status is <code class="docutils literal notranslate"><span class="pre">DOWN</span></code>.
+The overall system statuses <code class="docutils literal notranslate"><span class="pre">UP</span></code> and <code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code> map to HTTP status code <code class="docutils literal notranslate"><span class="pre">200</span></code>, and status <code class="docutils literal notranslate"><span class="pre">DOWN</span></code> maps to status code <code class="docutils literal notranslate"><span class="pre">503</span></code>.</p>
+<p>Example response when all checks succeeded (formatted for readability):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"crypto.filesystem"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"network.auth_config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no node DID"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"network.tls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Example response when one or more checks failed:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DOWN"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"network.tls"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DOWN"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"details"</span><span class="p">:</span><span class="w"> </span><span class="s2">"x509: certificate signed by unknown authority"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="basic-diagnostics">
+<h2>Basic diagnostics<a class="headerlink" href="#basic-diagnostics" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GET /status/diagnostics
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>this page is intended to be read by humans, not machines.
+all but the <code class="docutils literal notranslate"><span class="pre">status</span></code> entry are related to V5 functionality (gRPC network, VDRv1 and VCRv1 APIs).</p>
+</div>
+<p>Returns the status of the various services in <code class="docutils literal notranslate"><span class="pre">yaml</span></code> format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>network:
+    connections:
+        connected_peers:
+            - id: d38c6df5-63d2-4b2c-87f4-2e8bbfa5612f
+              address: nuts.nl:5555
+              nodedid: did:nuts:abc123
+        connected_peers_count: 1
+    state:
+        dag_xor: 6aada4464e380db16d0316e597956fcdaeada0e8f6023be82eeb9c798e1815c6
+        stored_database_size_bytes: 106496005
+        transaction_count: 9001
+vcr:
+    credential_count: 7
+    issuer:
+        issued_credentials_count: 0
+        revoked_credentials_count: 0
+    verifier:
+        revocations_count: 18
+vdr:
+    did_documents_count: 5
+    conflicted_did_documents:
+        total_count: 2
+        owned_count: 0
+status:
+    git_commit: d36837bae48b780bfb76134e85b506472fc207a6
+    os_arch: linux/amd64
+    software_version: master
+    uptime: 4h14m12s
+</pre></div>
+</div>
+<p>If you supply <code class="docutils literal notranslate"><span class="pre">application/json</span></code> for the <code class="docutils literal notranslate"><span class="pre">Accept</span></code> HTTP header it will return the diagnostics in JSON format.</p>
+<p>Explanation of ambiguous/complex entries in the diagnostics:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">vcr.credential_count</span></code> holds the total number of credentials known to the node (public VCs, and private VCs issued to a DID on the local node)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcr.issuer.issued_credentials_count</span></code> holds the total number of credentials issued by the local node</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcr.issuer.revoked_credentials_count</span></code> holds the total number of revoked credentials issued by the local node</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vcr.verifier.revocations_count</span></code> holds the total number of revoked credentials (public and private VCs)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vdr.conflicted_did_documents.total_count</span></code> holds the total number of DID documents that are conflicted (have parallel updates). This may indicate a stolen private key</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vdr.conflicted_did_documents.owned_count</span></code> holds the number of conflicted DID documents you control as a node owner</p></li>
+</ul>
+<p>Note: the <code class="docutils literal notranslate"><span class="pre">network</span></code> and <code class="docutils literal notranslate"><span class="pre">vdr</span></code> entries only apply to <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>.</p>
+</section>
+<section id="metrics">
+<h2>Metrics<a class="headerlink" href="#metrics" title="Link to this heading"></a></h2>
+<p>The Nuts service executable has build-in support for <strong>Prometheus</strong>. Prometheus is a time-series database which supports a wide variety of services. It also allows for exporting metrics to different visualization solutions like <strong>Grafana</strong>. See <a class="reference external" href="https://prometheus.io/">https://prometheus.io/</a> for more information on how to run Prometheus. The metrics are exposed at <code class="docutils literal notranslate"><span class="pre">/metrics</span></code></p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>In order for metrics to be gathered by Prometheus. A <code class="docutils literal notranslate"><span class="pre">job</span></code> has to be added to the <code class="docutils literal notranslate"><span class="pre">prometheus.yml</span></code> configuration file.
+Below is a minimal configuration file that will only gather Nuts metrics:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># my global config</span>
+<span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">15s</span><span class="w"> </span><span class="c1"># Set the scrape interval to every 15 seconds. Default is every 1 minute.</span>
+<span class="w">  </span><span class="nt">evaluation_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15s</span><span class="w"> </span><span class="c1"># Evaluate rules every 15 seconds. The default is every 1 minute.</span>
+<span class="w">  </span><span class="c1"># scrape_timeout is set to the global default (10s).</span>
+
+<span class="c1"># Load rules once and periodically evaluate them according to the global 'evaluation_interval'.</span>
+<span class="nt">rule_files</span><span class="p">:</span>
+<span class="c1"># - "first_rules.yml"</span>
+<span class="c1"># - "second_rules.yml"</span>
+
+<span class="c1"># A scrape configuration containing exactly one endpoint to scrape:</span>
+<span class="nt">scrape_configs</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="s">'nuts'</span>
+<span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="s">'/metrics'</span>
+<span class="w">    </span><span class="nt">scrape_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5s</span>
+<span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">'127.0.0.1:8081'</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>It’s important to enter the correct IP/domain and port where the Nuts node can be found!</p>
+</section>
+<section id="exported-metrics">
+<h3>Exported metrics<a class="headerlink" href="#exported-metrics" title="Link to this heading"></a></h3>
+<p>The Nuts service executable exports the following metric namespaces:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nuts_</span></code> contains metrics related to the functioning of the Nuts node</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">process_</span></code> contains OS metrics related to the process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">go_</span></code> contains Go metrics related to the process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">promhttp_</span></code> contains metrics related to HTTP calls to the Nuts node’s <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> endpoint</p></li>
+</ul>
+</section>
+</section>
+<section id="tracing">
+<h2>Tracing<a class="headerlink" href="#tracing" title="Link to this heading"></a></h2>
+<p>The Nuts node supports distributed tracing via OpenTelemetry. When enabled, it exports traces to an OTLP-compatible backend
+(e.g., Jaeger, Zipkin, .NET Aspire Dashboard, Grafana Tempo).</p>
+<section id="id1">
+<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Enable tracing by configuring the OTLP endpoint:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tracing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:4318</span>
+</pre></div>
+</div>
+<p>Or via environment variables:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">NUTS_TRACING_ENDPOINT</span><span class="o">=</span>localhost:4318
+</pre></div>
+</div>
+<p>Configuration options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tracing.endpoint</span></code> - OTLP HTTP endpoint (e.g., <code class="docutils literal notranslate"><span class="pre">localhost:4318</span></code>). Tracing is disabled when empty.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tracing.insecure</span></code> - Disable TLS for the OTLP connection (default: <code class="docutils literal notranslate"><span class="pre">false</span></code>). Only use in trusted networks or development environments, as trace data may contain sensitive information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tracing.servicename</span></code> - Service name reported to the tracing backend (default: <code class="docutils literal notranslate"><span class="pre">nuts-node</span></code>). Useful for distinguishing multiple instances in distributed tracing.</p></li>
+</ul>
+</section>
+<section id="what-is-traced">
+<h3>What is traced<a class="headerlink" href="#what-is-traced" title="Link to this heading"></a></h3>
+<p>The following are automatically instrumented:</p>
+<ul class="simple">
+<li><p><strong>Inbound HTTP requests</strong> - All API calls to the Nuts node create spans (except <code class="docutils literal notranslate"><span class="pre">/health</span></code>, <code class="docutils literal notranslate"><span class="pre">/metrics</span></code>, <code class="docutils literal notranslate"><span class="pre">/status</span></code>)</p></li>
+<li><p><strong>Outbound HTTP requests</strong> - HTTP calls to external services (e.g., fetching DID documents, OAuth flows)</p></li>
+<li><p><strong>SQL database</strong> - Database queries via GORM</p></li>
+<li><p><strong>Hashicorp Vault</strong> - Key storage operations when using Vault backend</p></li>
+<li><p><strong>Log correlation</strong> - Log entries include <code class="docutils literal notranslate"><span class="pre">trace_id</span></code> and <code class="docutils literal notranslate"><span class="pre">span_id</span></code> fields when tracing is enabled</p></li>
+<li><p><strong>OTLP log export</strong> - Logs are also exported to the OTLP backend for unified observability</p></li>
+</ul>
+</section>
+<section id="trace-context-propagation">
+<h3>Trace context propagation<a class="headerlink" href="#trace-context-propagation" title="Link to this heading"></a></h3>
+<p>The Nuts node uses W3C Trace Context (<code class="docutils literal notranslate"><span class="pre">traceparent</span></code> header) for propagating trace context across service boundaries.
+When calling the Nuts node from another traced service, include the <code class="docutils literal notranslate"><span class="pre">traceparent</span></code> header to link spans.</p>
+</section>
+<section id="known-limitations">
+<h3>Known limitations<a class="headerlink" href="#known-limitations" title="Link to this heading"></a></h3>
+<p>The following components are not yet instrumented:</p>
+<ul class="simple">
+<li><p><strong>Azure Key Vault</strong> - Azure managed keys backend is not instrumented. The Azure SDK supports OpenTelemetry via the <code class="docutils literal notranslate"><span class="pre">azotel</span></code> package (see <a class="reference external" href="https://github.com/Azure/azure-sdk-for-go/tree/main/sdk/tracing/azotel">Azure SDK tracing</a>).</p></li>
+<li><p><strong>gRPC network layer</strong> - P2P communication between nodes (<code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>) does not include tracing as it’s for v5 and deprecated</p></li>
+</ul>
+<p>These limitations may be addressed in future releases.</p>
+</section>
+</section>
+<section id="cpu-profiling">
+<h2>CPU profiling<a class="headerlink" href="#cpu-profiling" title="Link to this heading"></a></h2>
+<p>It’s possible to enable CPU profiling by passing the <code class="docutils literal notranslate"><span class="pre">--cpuprofile=/some/location.dmp</span></code> option.
+This will write a CPU profile to the given location when the node shuts down.
+The resulting file can be analyzed with Go tooling:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>go<span class="w"> </span>tool<span class="w"> </span>pprof<span class="w"> </span>/some/location.dmp
+</pre></div>
+</div>
+<p>The tooling includes a help function to get you started. To get started use the <code class="docutils literal notranslate"><span class="pre">web</span></code> command inside the tooling.
+It’ll open a SVG in a browser and give an overview of what the node was doing.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="logging.html" class="btn btn-neutral float-left" title="Logging" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli-reference.html" class="btn btn-neutral float-right" title="Server CLI Command Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

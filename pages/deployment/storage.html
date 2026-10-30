@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Storage &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Verifiable Credentials" href="verifiable-credentials.html" />
+    <link rel="prev" title="Running on Docker" href="docker.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Storage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sql-database">SQL database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aws-rds-iam-authentication">AWS RDS IAM authentication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#session-storage">Session storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#local">Local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memcached">Memcached</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#redis">Redis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#private-keys">Private Keys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#filesystem">Filesystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#microsoft-azure-key-vault">Microsoft Azure Key Vault</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hashicorp-vault">HashiCorp Vault</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#migrating-to-hashicorp-vault">Migrating to Hashicorp Vault</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#external-store-api">External Store API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Storage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/storage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="storage">
+<span id="storage-configuration"></span><h1>Storage<a class="headerlink" href="#storage" title="Link to this heading"></a></h1>
+<p>The Nuts node supports different backends for storage. This page describes the particulars of each backend and how to configure it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This page does not describe how to configure storage when using <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DIDs and the Nuts gRPC network,
+which require specific storage configuration. If your use case require these features, refer to the v5 documentation for configuration storage.</p>
+</div>
+<p>The Nuts node uses two types of storage:</p>
+<ul class="simple">
+<li><p>SQL database for storing DID documents and Verifiable Credentials.</p></li>
+<li><p>Private key storage for securely storing cryptographic private keys.</p></li>
+</ul>
+<p>The Nuts node does not backup your data, remember to backup the data in these storages regularly.
+Also remember to test your backup and restore procedure.</p>
+<section id="sql-database">
+<h2>SQL database<a class="headerlink" href="#sql-database" title="Link to this heading"></a></h2>
+<p>Currently supported SQL databases are Postgres, MySQL, Microsoft SQL Server, Microsoft Azure SQL Server, and SQLite.
+The database of your preference can be set by configuring a connection string in <code class="docutils literal notranslate"><span class="pre">storage.sql.connection</span></code>.
+Only in non-strictmode, if no connection string is set this will default to SQLite in a file called <code class="docutils literal notranslate"><span class="pre">sqlite.db</span></code> in the configured data directory.</p>
+<p>Connection strings must be in the following format:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>protocol://username:password@host:port/database_name?options
+</pre></div>
+</div>
+<p>Refer to the documentation of the driver for the database you are using for the correct connection string format:</p>
+<ul class="simple">
+<li><p>Postgres <a class="reference external" href="https://github.com/jackc/pgx?tab=readme-ov-file#example-usage">github.com/jackc/pgx</a> (e.g. <code class="docutils literal notranslate"><span class="pre">postgres://user:password&#64;localhost:5432/dbname?sslmode=disable</span></code>)</p></li>
+<li><p>MySql: <a class="reference external" href="https://github.com/go-sql-driver/mysql?tab=readme-ov-file#dsn-data-source-name">github.com/go-sql-driver/mysql</a> (e.g. <code class="docutils literal notranslate"><span class="pre">mysql://user:password&#64;tcp(localhost:3306)/dbname?charset=utf8mb4&amp;parseTime=True&amp;loc=Local</span></code>)</p></li>
+<li><p>MS SQL Server: <a class="reference external" href="https://github.com/microsoft/go-mssqldb">github.com/microsoft/go-mssqldb</a> (e.g. <code class="docutils literal notranslate"><span class="pre">sqlserver://user:password&#64;localhost:1433?database=dbname</span></code>)</p></li>
+<li><p>Azure SQL Server: <a class="reference external" href="https://github.com/microsoft/go-mssqldb">github.com/microsoft/go-mssqldb</a> (e.g. <code class="docutils literal notranslate"><span class="pre">azuresql://server=awesome-server;port=1433;database=awesome-db;fedauth=ActiveDirectoryDefault;</span></code>)</p></li>
+<li><p>SQLite (e.g. <code class="docutils literal notranslate"><span class="pre">sqlite:file:/some/path/sqlite.db?_pragma=foreign_keys(1)&amp;journal_mode(WAL)</span></code>)</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Usage of SQLite is not recommended for production environments.
+Connections to a SQLite DB are restricted to 1, which will lead to severe performance reduction.</p>
+</div>
+<section id="aws-rds-iam-authentication">
+<h3>AWS RDS IAM authentication<a class="headerlink" href="#aws-rds-iam-authentication" title="Link to this heading"></a></h3>
+<p>Nuts supports AWS RDS IAM database authentication for SQL storage.
+This replaces static database passwords with short-lived IAM auth tokens generated by the AWS SDK.</p>
+<p>Support scope:</p>
+<ul class="simple">
+<li><p>Supported SQL connection schemes: <code class="docutils literal notranslate"><span class="pre">postgres://</span></code> and <code class="docutils literal notranslate"><span class="pre">mysql://</span></code>.</p></li>
+<li><p>Not supported for RDS IAM: <code class="docutils literal notranslate"><span class="pre">sqlite:</span></code>, <code class="docutils literal notranslate"><span class="pre">sqlserver://</span></code> and <code class="docutils literal notranslate"><span class="pre">azuresql://</span></code>.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">storage.sql.rdsiam.dbuser</span></code> is set, that database user is used; otherwise the username from <code class="docutils literal notranslate"><span class="pre">storage.sql.connection</span></code> is used.</p></li>
+</ul>
+<p>Configuration in the Nuts node:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sql</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">connection</span><span class="p">:</span><span class="w"> </span><span class="s">"postgres://dbuser@mydb.eu-west-1.rds.amazonaws.com:5432/nuts?sslmode=require"</span>
+<span class="w">    </span><span class="nt">rdsiam</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="s">"eu-west-1"</span>
+<span class="w">      </span><span class="nt">dbuser</span><span class="p">:</span><span class="w"> </span><span class="s">"dbuser"</span><span class="w">   </span><span class="c1"># optional</span>
+</pre></div>
+</div>
+<p>Configuration keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">storage.sql.rdsiam.enabled</span></code>: enables RDS IAM authentication.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage.sql.rdsiam.region</span></code>: AWS region of the RDS instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage.sql.rdsiam.dbuser</span></code>: optional IAM-enabled DB user to use.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage.sql.rdsiam.tokenrefreshinterval</span></code>: optional token refresh interval, defaults to <code class="docutils literal notranslate"><span class="pre">14m</span></code>.</p></li>
+</ul>
+<p>When enabled, the node automatically refreshes IAM tokens and uses new tokens for fresh SQL connections.</p>
+<p>For generic AWS RDS IAM setup (enabling IAM DB auth on the instance, IAM policies, and DB user grants),
+refer to the AWS documentation: <a class="reference external" href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html">IAM database authentication for MariaDB, MySQL, and PostgreSQL</a>.</p>
+</section>
+</section>
+<section id="session-storage">
+<h2>Session storage<a class="headerlink" href="#session-storage" title="Link to this heading"></a></h2>
+<p>Session storage is used for storing access tokens, nonces and other volatile data.
+Session data is volatile by nature. There are 3 supported session storage types:</p>
+<ul class="simple">
+<li><p>In-memory</p></li>
+<li><p>Memcached</p></li>
+<li><p>Redis (standalone, cluster, sentinel)</p></li>
+</ul>
+<section id="local">
+<h3>Local<a class="headerlink" href="#local" title="Link to this heading"></a></h3>
+<p>This is the default and will store data in-memory. Any restart will wipe all data.
+Data is also not shared if you run multiple nodes.</p>
+</section>
+<section id="memcached">
+<h3>Memcached<a class="headerlink" href="#memcached" title="Link to this heading"></a></h3>
+<p>Memcached can be enabled with the following config:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage.session.memcached.address</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:11211</span>
+</pre></div>
+</div>
+<p>You can add multiple memcached servers to the list.
+memcached is not capable of clustering. Each piece of data is stored on a single instance.
+If you want true HA, you’ll need to use Redis.
+For more information on Memcached connection strings, refer to the <a class="reference external" href="https://docs.memcached.org/">Memcached documentation</a>.</p>
+</section>
+<section id="redis">
+<h3>Redis<a class="headerlink" href="#redis" title="Link to this heading"></a></h3>
+<p>Redis is the only option if you want to run multiple nodes and the cache as HA.
+Redis can be configured in standalone or sentinel mode.
+Standalone:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">session</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:6379</span>
+<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user</span>
+<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pass</span>
+<span class="w">      </span><span class="nt">db</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</pre></div>
+</div>
+<p>Sentinel:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">session</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">sentinel</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">master</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mymaster</span>
+<span class="w">        </span><span class="nt">nodes</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:26379</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:26380</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost:26381</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="private-keys">
+<h2>Private Keys<a class="headerlink" href="#private-keys" title="Link to this heading"></a></h2>
+<p>Your node generates and stores private keys when you create DID documents or add new keys to it.
+Private keys are very sensitive! If you leak them, others could impersonate your identity and possibly worse.
+If you lose them you need to re-create your identity, which could be very cumbersome.
+Thus, it’s very important the private key storage is both secure and reliable.</p>
+<section id="filesystem">
+<h3>Filesystem<a class="headerlink" href="#filesystem" title="Link to this heading"></a></h3>
+<p>This is the default backend but not recommended for production. It stores keys unencrypted on disk.
+Make sure to include the directory in your backups and keep these in a safe place.
+If you want to use filesystem in strict mode, you have to set it explicitly, otherwise the node fails during startup.</p>
+</section>
+<section id="microsoft-azure-key-vault">
+<h3>Microsoft Azure Key Vault<a class="headerlink" href="#microsoft-azure-key-vault" title="Link to this heading"></a></h3>
+<p>This storage backend uses Microsoft Azure’s Key Vault. The following rules apply:</p>
+<ul class="simple">
+<li><p>To store private keys in an Azure Key Vault HSM, set <code class="docutils literal notranslate"><span class="pre">crypto.azurekv.hsm</span></code> to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p>Keys created through this storage backend are marked as non-exportable.</p></li>
+<li><p>Azure Key Vault storage can’t be used for encrypting <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> private credentials or for data encryption.</p></li>
+</ul>
+<p>The following credential options are available for authentication:
+- <code class="docutils literal notranslate"><span class="pre">managed_identity</span></code>: authenticate using ManagedIdentity credential (recommended, because default credential often times out when deployed in Azure).
+- <code class="docutils literal notranslate"><span class="pre">default</span></code>: authenticate using the DefaultChain credential.
+At least the <code class="docutils literal notranslate"><span class="pre">AZURE_TENANT_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">AZURE_CLIENT_ID</span></code> (for user assigned identities) need to be set in the environment.
+Refer to the <a class="reference external" href="https://github.com/Azure/azure-sdk-for-go/wiki/Set-up-Your-Environment-for-Authentication">Azure SDK for Go documentation</a> for more information.</p>
+</section>
+<section id="hashicorp-vault">
+<h3>HashiCorp Vault<a class="headerlink" href="#hashicorp-vault" title="Link to this heading"></a></h3>
+<p>This storage backend uses the <a class="reference external" href="https://www.vaultproject.io/docs/secrets/kv/kv-v1">Vault KV version 1 store</a>.
+The path prefix defaults to <code class="docutils literal notranslate"><span class="pre">kv</span></code> and can be configured using the <code class="docutils literal notranslate"><span class="pre">crypto.vault.pathprefix</span></code> option.
+There needs to be a KV Secrets Engine (v1) enabled under this prefix path.</p>
+<p>All private keys are stored under the path <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;/nuts-private-keys/*</span></code>.
+Each key is stored under a UUID, resulting in a full key path like <code class="docutils literal notranslate"><span class="pre">kv/nuts-private-keys/bfedb25f-a218-4687-9acf-29a263ed4c50</span></code> (old keys are stored under the kid).
+A Vault token must be provided by either configuring it using the config <code class="docutils literal notranslate"><span class="pre">crypto.vault.token</span></code> or setting the VAULT_TOKEN environment variable.
+The token must have a vault policy which has READ and WRITES rights on the path. In addition it needs to READ the token information “auth/token/lookup-self” which should be part of the default policy.</p>
+<section id="migrating-to-hashicorp-vault">
+<h4>Migrating to Hashicorp Vault<a class="headerlink" href="#migrating-to-hashicorp-vault" title="Link to this heading"></a></h4>
+<p>Migrating your private keys from the filesystem to Vault is relatively easy: just upload the keys to Vault under <code class="docutils literal notranslate"><span class="pre">kv/nuts-private-keys</span></code>.</p>
+<p>Alternatively you can use the <code class="docutils literal notranslate"><span class="pre">fs2vault</span></code> crypto command, which takes the directory containing the private keys as argument (the example assumes the container is called <em>nuts-node</em> and <em>NUTS_DATADIR=/opt/nuts/data</em>):</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>nuts-node<span class="w"> </span>nuts<span class="w"> </span>crypto<span class="w"> </span>fs2vault<span class="w"> </span>/opt/nuts/data/crypto
+</pre></div>
+</div>
+<p>In any case, make sure the key-value secret engine exists before trying to migrate (default engine name is <code class="docutils literal notranslate"><span class="pre">kv</span></code>).</p>
+</section>
+</section>
+<section id="external-store-api">
+<h3>External Store API<a class="headerlink" href="#external-store-api" title="Link to this heading"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The external store API is deprecated and will be removed in the next major release.
+Anyone with access to the external store can read/write your private keys, so make sure it’s properly secured and only the Nuts node can access it.</p>
+</div>
+<p>The Nuts node can be configured to use an external store for private keys. This allows you to use your own key management system.
+The external store must implement the Nuts Secret store API specification.
+This OpenAPI specification is available from the <a class="reference external" href="https://github.com/nuts-foundation/secret-store-api">Secret Store API repository</a> on GitHub.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docker.html" class="btn btn-neutral float-left" title="Running on Docker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="verifiable-credentials.html" class="btn btn-neutral float-right" title="Verifiable Credentials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

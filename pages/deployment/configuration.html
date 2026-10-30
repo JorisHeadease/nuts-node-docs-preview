@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Migrating from v5 to v6" href="migration.html" />
+    <link rel="prev" title="Choosing a domain name" href="domain.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ordering">Ordering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#server-options">Server options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#options-specific-for-did-nuts-grpc">Options specific for <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>/gRPC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#secrets">Secrets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strict-mode">Strict mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#registering-node-http-services-baseurl">Registering <code class="docutils literal notranslate"><span class="pre">node-http-services-baseurl</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security-considerations.html">Security Considerations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<span id="nuts-node-config"></span><h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
+<p>The Nuts node can be configured using a YAML configuration file, environment variables and commandline params.</p>
+<p>The parameters follow the following convention:
+<code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">nuts</span> <span class="pre">--parameter</span> <span class="pre">X</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">NUTS_PARAMETER=X</span> <span class="pre">nuts</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">parameter:</span> <span class="pre">X</span></code> in a yaml file.</p>
+<p>Or for this piece of yaml</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nested</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X</span>
+</pre></div>
+</div>
+<p>is equal to <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">nuts</span> <span class="pre">--nested.parameter</span> <span class="pre">X</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">NUTS_NESTED_PARAMETER=X</span> <span class="pre">nuts</span></code></p>
+<p>Config parameters for engines are prepended by the <code class="docutils literal notranslate"><span class="pre">engine.ConfigKey</span></code> by default (configurable):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">engine</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">nested</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">parameter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X</span>
+</pre></div>
+</div>
+<p>is equal to <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">nuts</span> <span class="pre">--engine.nested.parameter</span> <span class="pre">X</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">NUTS_ENGINE_NESTED_PARAMETER=X</span> <span class="pre">nuts</span></code></p>
+<p>While most options are a single value, some are represented as a list (indicated with the square brackets in the table below).
+To provide multiple values through flags or environment variables you can separate them with a comma (<code class="docutils literal notranslate"><span class="pre">var1,var2</span></code>).
+If you need to provide an actual value with a comma, you can escape it with a backslash (<code class="docutils literal notranslate"><span class="pre">\,</span></code>) to avoid it having split into multiple values.</p>
+<section id="ordering">
+<h2>Ordering<a class="headerlink" href="#ordering" title="Link to this heading"></a></h2>
+<p>Command line parameters have the highest priority, then environment variables, then parameters from the configfile and lastly defaults.
+The location of the configfile is determined by the environment variable <code class="docutils literal notranslate"><span class="pre">NUTS_CONFIGFILE</span></code> or the commandline parameter <code class="docutils literal notranslate"><span class="pre">--configfile</span></code>. If both are missing the default location <code class="docutils literal notranslate"><span class="pre">./nuts.yaml</span></code> is used.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CLI</span> <span class="o">&gt;</span> <span class="n">ENV</span> <span class="o">&gt;</span> <span class="n">Config</span> <span class="n">File</span> <span class="o">&gt;</span> <span class="n">Defaults</span>
+</pre></div>
+</div>
+</section>
+<section id="server-options">
+<h2>Server options<a class="headerlink" href="#server-options" title="Link to this heading"></a></h2>
+<p>The following options can be configured on the server:</p>
+<table class="options-table docutils align-default" id="id1">
+<caption><span class="caption-text">Server Options</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>configfile</p></td>
+<td><p>./config/nuts.yaml</p></td>
+<td><p>Nuts config file</p></td>
+</tr>
+<tr class="row-odd"><td><p>cpuprofile</p></td>
+<td></td>
+<td><p>When set, a CPU profile is written to the given path. Ignored when strictmode is set.</p></td>
+</tr>
+<tr class="row-even"><td><p>datadir</p></td>
+<td><p>./data</p></td>
+<td><p>Directory where the node stores its files.</p></td>
+</tr>
+<tr class="row-odd"><td><p>didmethods</p></td>
+<td><p>[web,nuts]</p></td>
+<td><p>Comma-separated list of enabled DID methods (without did: prefix). It also controls the order in which DIDs are returned by APIs, and which DID is used for signing if the verifying party does not impose restrictions on the DID method used.</p></td>
+</tr>
+<tr class="row-even"><td><p>internalratelimiter</p></td>
+<td><p>true</p></td>
+<td><p>When set, expensive internal calls are rate-limited to protect the network. Always enabled in strict mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>loggerformat</p></td>
+<td><p>text</p></td>
+<td><p>Log format (text, json)</p></td>
+</tr>
+<tr class="row-even"><td><p>strictmode</p></td>
+<td><p>true</p></td>
+<td><p>When set, insecure settings are forbidden.</p></td>
+</tr>
+<tr class="row-odd"><td><p>url</p></td>
+<td></td>
+<td><p>Public facing URL of the server (required). Must be HTTPS when strictmode is set.</p></td>
+</tr>
+<tr class="row-even"><td><p>verbosity</p></td>
+<td><p>info</p></td>
+<td><p>Log level (trace, debug, info, warn, error)</p></td>
+</tr>
+<tr class="row-odd"><td><p>httpclient.timeout</p></td>
+<td><p>30s</p></td>
+<td><p>Request time-out for HTTP clients, such as ’10s’. Refer to Golang’s ‘time.Duration’ syntax for a more elaborate description of the syntax.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Auth</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>auth.authorizationendpoint.enabled</p></td>
+<td><p>false</p></td>
+<td><p>enables the v2 API’s OAuth2 Authorization Endpoint, used by OpenID4VP and OpenID4VCI. This flag might be removed in a future version (or its default become ‘true’) as the use cases and implementation of OpenID4VP and OpenID4VCI mature.</p></td>
+</tr>
+<tr class="row-even"><td><p>auth.experimental.jwtbearerclient</p></td>
+<td><p>false</p></td>
+<td><p>enables the experimental RFC 7523 jwt-bearer two-VP token request flow. While disabled (the default), requests carrying a service-provider subject identifier are rejected. Subject to change without notice.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Crypto</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>crypto.storage</p></td>
+<td></td>
+<td><p>Storage to use, ‘fs’ for file system (for development purposes), ‘vaultkv’ for HashiCorp Vault KV store, ‘azure-keyvault’ for Azure Key Vault, ‘external’ for an external backend (deprecated).</p></td>
+</tr>
+<tr class="row-odd"><td><p>crypto.azurekv.hsm</p></td>
+<td><p>false</p></td>
+<td><p>Whether to store the key in a hardware security module (HSM). If true, the Azure Key Vault must be configured for HSM usage. Default: false</p></td>
+</tr>
+<tr class="row-even"><td><p>crypto.azurekv.timeout</p></td>
+<td><p>10s</p></td>
+<td><p>Timeout of client calls to Azure Key Vault, in Golang time.Duration string format (e.g. 10s).</p></td>
+</tr>
+<tr class="row-odd"><td><p>crypto.azurekv.url</p></td>
+<td></td>
+<td><p>The URL of the Azure Key Vault.</p></td>
+</tr>
+<tr class="row-even"><td><p>crypto.azurekv.auth.type</p></td>
+<td><p>default</p></td>
+<td><p>Credential type to use when authenticating to the Azure Key Vault. Options: default, managed_identity (see <a class="reference external" href="https://github.com/Azure/azure-sdk-for-go/blob/main/sdk/azidentity/README.md">https://github.com/Azure/azure-sdk-for-go/blob/main/sdk/azidentity/README.md</a> for an explanation of the options).</p></td>
+</tr>
+<tr class="row-odd"><td><p>crypto.vault.address</p></td>
+<td></td>
+<td><p>The Vault address. If set it overwrites the VAULT_ADDR env var.</p></td>
+</tr>
+<tr class="row-even"><td><p>crypto.vault.pathprefix</p></td>
+<td><p>kv</p></td>
+<td><p>The Vault path prefix.</p></td>
+</tr>
+<tr class="row-odd"><td><p>crypto.vault.timeout</p></td>
+<td><p>5s</p></td>
+<td><p>Timeout of client calls to Vault, in Golang time.Duration string format (e.g. 1s).</p></td>
+</tr>
+<tr class="row-even"><td><p>crypto.vault.token</p></td>
+<td></td>
+<td><p>The Vault token. If set it overwrites the VAULT_TOKEN env var.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Discovery</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>discovery.client.refreshinterval</p></td>
+<td><p>10m0s</p></td>
+<td><p>Interval at which the client synchronizes with the Discovery Server; refreshing Verifiable Presentations of local DIDs and loading changes, updating the local copy. It only will actually refresh registrations of local DIDs that about to expire (less than 1/4th of their lifetime left). Specified as Golang duration (e.g. 1m, 1h30m).</p></td>
+</tr>
+<tr class="row-odd"><td><p>discovery.definitions.directory</p></td>
+<td><p>./config/discovery</p></td>
+<td><p>Directory to load Discovery Service Definitions from. If not set, the discovery service will be disabled. If the directory contains JSON files that can’t be parsed as service definition, the node will fail to start.</p></td>
+</tr>
+<tr class="row-even"><td><p>discovery.server.ids</p></td>
+<td><p>[]</p></td>
+<td><p>IDs of the Discovery Service for which to act as server. If an ID does not map to a loaded service definition, the node will fail to start.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>HTTP</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>http.clientipheader</p></td>
+<td><p>X-Forwarded-For</p></td>
+<td><p>Case-sensitive HTTP Header that contains the client IP used for audit logs. For the X-Forwarded-For header only link-local, loopback, and private IPs are excluded. Switch to X-Real-IP or a custom header if you see your own proxy/infra in the logs.</p></td>
+</tr>
+<tr class="row-odd"><td><p>http.log</p></td>
+<td><p>metadata</p></td>
+<td><p>What to log about HTTP requests. Options are ‘nothing’, ‘metadata’ (log request method, URI, IP and response code), and ‘metadata-and-body’ (log the request and response body, in addition to the metadata). In strictmode, ‘metadata-and-body’ is not allowed and is changed to ‘metadata’ at startup.</p></td>
+</tr>
+<tr class="row-even"><td><p>http.cache.maxbytes</p></td>
+<td><p>10485760</p></td>
+<td><p>HTTP client maximum size of the response cache in bytes. If 0, the HTTP client does not cache responses.</p></td>
+</tr>
+<tr class="row-odd"><td><p>http.client.allowedinternalcidrs</p></td>
+<td><p>[]</p></td>
+<td><p>IP ranges (CIDR notation, e.g. 10.0.0.0/8) exempted from the strict-mode SSRF guard, which otherwise blocks outbound requests to non-public networks. Use to permit internal flows that legitimately target a private address, such as an internal credential offering or an internal OAuth user flow. Leave empty to block all non-public addresses.</p></td>
+</tr>
+<tr class="row-even"><td><p>http.client.deniedcidrs</p></td>
+<td><p>[]</p></td>
+<td><p>IP ranges (CIDR notation) that outbound HTTP requests must never target in strict mode, in addition to the built-in blocked ranges (non-public addresses and cloud metadata endpoints). Use for publicly routable ranges that are internal-only in your infrastructure. Takes precedence over http.client.allowedinternalcidrs.</p></td>
+</tr>
+<tr class="row-odd"><td><p>http.internal.address</p></td>
+<td><p>127.0.0.1:8081</p></td>
+<td><p>Address and port the server will be listening to for internal-facing endpoints.</p></td>
+</tr>
+<tr class="row-even"><td><p>http.internal.auth.audience</p></td>
+<td></td>
+<td><p>Expected audience for JWT tokens (default: hostname)</p></td>
+</tr>
+<tr class="row-odd"><td><p>http.internal.auth.authorizedkeyspath</p></td>
+<td></td>
+<td><p>Path to an authorized_keys file for trusted JWT signers</p></td>
+</tr>
+<tr class="row-even"><td><p>http.internal.auth.type</p></td>
+<td></td>
+<td><p>Whether to enable authentication for /internal endpoints, specify ‘token_v2’ for bearer token mode or ‘token’ for legacy bearer token mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>http.public.address</p></td>
+<td><p>:8080</p></td>
+<td><p>Address and port the server will be listening to for public-facing endpoints.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>JSONLD</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>jsonld.contexts.localmapping</p></td>
+<td><p>[<a class="reference external" href="https://nuts.nl/credentials/2024=assets/contexts/nuts-2024.ldjson,https://nuts.nl/credentials/v1=assets/contexts/nuts.ldjson,https://schema.org=assets/contexts/schema-org-v13.ldjson,https://w3c-ccg.github.io/lds-jws2020/contexts/lds-jws2020-v1.json=assets/contexts/lds-jws2020-v1.ldjson,https://w3id.org/vc/status-list/2021/v1=assets/contexts/w3c-statuslist2021.ldjson,https://www.w3.org/2018/credentials/v1=assets/contexts/w3c-credentials-v1.ldjson">https://nuts.nl/credentials/2024=assets/contexts/nuts-2024.ldjson,https://nuts.nl/credentials/v1=assets/contexts/nuts.ldjson,https://schema.org=assets/contexts/schema-org-v13.ldjson,https://w3c-ccg.github.io/lds-jws2020/contexts/lds-jws2020-v1.json=assets/contexts/lds-jws2020-v1.ldjson,https://w3id.org/vc/status-list/2021/v1=assets/contexts/w3c-statuslist2021.ldjson,https://www.w3.org/2018/credentials/v1=assets/contexts/w3c-credentials-v1.ldjson</a>]</p></td>
+<td><p>This setting allows mapping external URLs to local files for e.g. preventing external dependencies. These mappings have precedence over those in remoteallowlist.</p></td>
+</tr>
+<tr class="row-even"><td><p>jsonld.contexts.remoteallowlist</p></td>
+<td><p>[<a class="reference external" href="https://schema.org,https://www.w3.org/2018/credentials/v1,https://w3c-ccg.github.io/lds-jws2020/contexts/lds-jws2020-v1.json,https://w3id.org/vc/status-list/2021/v1">https://schema.org,https://www.w3.org/2018/credentials/v1,https://w3c-ccg.github.io/lds-jws2020/contexts/lds-jws2020-v1.json,https://w3id.org/vc/status-list/2021/v1</a>]</p></td>
+<td><p>In strict mode, fetching external JSON-LD contexts is not allowed except for context-URLs listed here.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>PKI</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>pki.maxupdatefailhours</p></td>
+<td><p>4</p></td>
+<td><p>Maximum number of hours that a denylist update can fail</p></td>
+</tr>
+<tr class="row-odd"><td><p>pki.softfail</p></td>
+<td><p>true</p></td>
+<td><p>Do not reject certificates if their revocation status cannot be established when softfail is true</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Storage</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>storage.debug</p></td>
+<td><p>false</p></td>
+<td><p>When true, enables extra logging of storage-layer problems (e.g. performance issues).</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.session.memcached.address</p></td>
+<td><p>[]</p></td>
+<td><p>List of Memcached server addresses. These can be a simple ‘host:port’ or a Memcached connection URL with scheme, auth and other options.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.session.redis.address</p></td>
+<td></td>
+<td><p>Redis session database server address. This can be a simple ‘host:port’ or a Redis connection URL with scheme, auth and other options. If not set it, defaults to an in-memory database.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.session.redis.database</p></td>
+<td></td>
+<td><p>Redis session database name, which is used as prefix every key. Can be used to have multiple instances use the same Redis instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.session.redis.password</p></td>
+<td></td>
+<td><p>Redis session database password. If set, it overrides the username in the connection URL.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.session.redis.username</p></td>
+<td></td>
+<td><p>Redis session database username. If set, it overrides the username in the connection URL.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.session.redis.sentinel.master</p></td>
+<td></td>
+<td><p>Name of the Redis Sentinel master. Setting this property enables Redis Sentinel.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.session.redis.sentinel.nodes</p></td>
+<td><p>[]</p></td>
+<td><p>Addresses of the Redis Sentinels to connect to initially. Setting this property enables Redis Sentinel.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.session.redis.sentinel.password</p></td>
+<td></td>
+<td><p>Password for authenticating to Redis Sentinels.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.session.redis.sentinel.username</p></td>
+<td></td>
+<td><p>Username for authenticating to Redis Sentinels.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.session.redis.tls.truststorefile</p></td>
+<td></td>
+<td><p>PEM file containing the trusted CA certificate(s) for authenticating remote Redis session servers. Can only be used when connecting over TLS (use ‘rediss://’ as scheme in address).</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.sql.connection</p></td>
+<td></td>
+<td><p>Connection string for the SQL database. If not set it, defaults to a SQLite database stored inside the configured data directory. Note: using SQLite is not recommended in production environments. If using SQLite anyways, remember to enable foreign keys (‘_foreign_keys=on’) and the write-ahead-log (‘_journal_mode=WAL’).</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.sql.rdsiam.dbuser</p></td>
+<td></td>
+<td><p>Database username for IAM authentication. If not specified, the username from the connection string will be used. The database user must be created with IAM authentication enabled.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.sql.rdsiam.enabled</p></td>
+<td><p>false</p></td>
+<td><p>Enable AWS RDS IAM authentication for the SQL database connection. When enabled, the node will use temporary IAM tokens instead of passwords. Requires the connection string to be a PostgreSQL or MySQL RDS endpoint without a password.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.sql.rdsiam.region</p></td>
+<td></td>
+<td><p>AWS region where the RDS instance is located (e.g., ‘us-east-1). Required when RDS IAM authentication is enabled.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.sql.rdsiam.tokenrefreshinterval</p></td>
+<td><p>14m0s</p></td>
+<td><p>Interval at which to refresh the IAM authentication token. RDS tokens are valid for 15 minutes, so set this to ensure tokens are refreshed before expiry. Specified as Golang duration (e.g. 10m, 1h).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Tracing</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>tracing.endpoint</p></td>
+<td></td>
+<td><p>OTLP collector endpoint for OpenTelemetry tracing (e.g., ‘localhost:4318’). When empty, tracing is disabled.</p></td>
+</tr>
+<tr class="row-odd"><td><p>tracing.insecure</p></td>
+<td><p>false</p></td>
+<td><p>Disable TLS for the OTLP connection.</p></td>
+</tr>
+<tr class="row-even"><td><p>tracing.servicename</p></td>
+<td></td>
+<td><p>Service name reported to the tracing backend. Defaults to ‘nuts-node’.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>policy</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>policy.directory</p></td>
+<td><p>./config/policy</p></td>
+<td><p>Directory to read policy files from. Policy files are JSON files that contain a scope to PresentationDefinition mapping.</p></td>
+</tr>
+<tr class="row-odd"><td><p>policy.authzen.endpoint</p></td>
+<td></td>
+<td><p>Base URL of the AuthZen PDP endpoint. Required when any credential profile uses scope_policy ‘dynamic’; the node refuses to start if such a profile is configured but this flag is empty.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="options-specific-for-did-nuts-grpc">
+<h3>Options specific for <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code>/gRPC<a class="headerlink" href="#options-specific-for-did-nuts-grpc" title="Link to this heading"></a></h3>
+<p>The following table contains additional (deprecated) options that are relevant for use cases that use <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DIDs and/or the gRPC network.
+If your use case does not use these features, you can ignore this table.</p>
+<table class="options-table docutils align-default" id="id2">
+<caption><span class="caption-text">did:nuts/gRPC Server Options</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>tls.certfile</p></td>
+<td></td>
+<td><p>PEM file containing the certificate for the gRPC server (also used as client certificate). Required in strict mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>tls.certheader</p></td>
+<td></td>
+<td><p>Name of the HTTP header that will contain the client certificate when TLS is offloaded for gRPC.</p></td>
+</tr>
+<tr class="row-even"><td><p>tls.certkeyfile</p></td>
+<td></td>
+<td><p>PEM file containing the private key of the gRPC server certificate. Required in strict mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>tls.offload</p></td>
+<td></td>
+<td><p>Whether to enable TLS offloading for incoming gRPC connections. Enable by setting it to ‘incoming’. If enabled ‘tls.certheader’ must be configured as well.</p></td>
+</tr>
+<tr class="row-even"><td><p>tls.truststorefile</p></td>
+<td><p>./config/ssl/truststore.pem</p></td>
+<td><p>PEM file containing the trusted CA certificates for authenticating remote gRPC servers. Required in strict mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Auth</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>auth.accesstokenlifespan</p></td>
+<td><p>60</p></td>
+<td><p>defines how long (in seconds) an access token is valid. Uses default in strict mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>auth.clockskew</p></td>
+<td><p>5000</p></td>
+<td><p>allowed JWT Clock skew in milliseconds</p></td>
+</tr>
+<tr class="row-even"><td><p>auth.contractvalidators</p></td>
+<td><p>[irma,dummy,employeeid]</p></td>
+<td><p>sets the different contract validators to use</p></td>
+</tr>
+<tr class="row-odd"><td><p>auth.irma.autoupdateschemas</p></td>
+<td><p>true</p></td>
+<td><p>set if you want automatically update the IRMA schemas every 60 minutes.</p></td>
+</tr>
+<tr class="row-even"><td><p>auth.irma.schememanager</p></td>
+<td><p>pbdf</p></td>
+<td><p>IRMA schemeManager to use for attributes. Can be either ‘pbdf’ or ‘irma-demo’.</p></td>
+</tr>
+<tr class="row-odd"><td><p>auth.irma.cors.origin</p></td>
+<td><p>[]</p></td>
+<td><p>sets the allowed CORS origins for the IRMA server</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Events</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>events.nats.hostname</p></td>
+<td><p>0.0.0.0</p></td>
+<td><p>Hostname for the NATS server</p></td>
+</tr>
+<tr class="row-even"><td><p>events.nats.port</p></td>
+<td><p>4222</p></td>
+<td><p>Port where the NATS server listens on</p></td>
+</tr>
+<tr class="row-odd"><td><p>events.nats.storagedir</p></td>
+<td></td>
+<td><p>Directory where file-backed streams are stored in the NATS server</p></td>
+</tr>
+<tr class="row-even"><td><p>events.nats.timeout</p></td>
+<td><p>30</p></td>
+<td><p>Timeout for NATS server operations</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>GoldenHammer</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>goldenhammer.enabled</p></td>
+<td><p>true</p></td>
+<td><p>Whether to enable automatically fixing DID documents with the required endpoints.</p></td>
+</tr>
+<tr class="row-odd"><td><p>goldenhammer.interval</p></td>
+<td><p>10m0s</p></td>
+<td><p>The interval in which to check for DID documents to fix.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Network</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>network.bootstrapnodes</p></td>
+<td><p>[]</p></td>
+<td><p>List of bootstrap nodes (‘&lt;host&gt;:&lt;port&gt;’) which the node initially connect to.</p></td>
+</tr>
+<tr class="row-even"><td><p>network.connectiontimeout</p></td>
+<td><p>5000</p></td>
+<td><p>Timeout before an outbound connection attempt times out (in milliseconds).</p></td>
+</tr>
+<tr class="row-odd"><td><p>network.enablediscovery</p></td>
+<td><p>true</p></td>
+<td><p>Whether to enable automatic connecting to other nodes.</p></td>
+</tr>
+<tr class="row-even"><td><p>network.grpcaddr</p></td>
+<td><p>:5555</p></td>
+<td><p>Local address for gRPC to listen on. If empty the gRPC server won’t be started and other nodes will not be able to connect to this node (outbound connections can still be made).</p></td>
+</tr>
+<tr class="row-odd"><td><p>network.idletimeout</p></td>
+<td><p>2m0s</p></td>
+<td><p>Period without any received message after which a connection to a peer is closed and re-established (in Golang duration format, e.g. ‘2m’). Specify 0 to disable.</p></td>
+</tr>
+<tr class="row-even"><td><p>network.maxbackoff</p></td>
+<td><p>1h0m0s</p></td>
+<td><p>Maximum between outbound connections attempts to unresponsive nodes (in Golang duration format, e.g. ‘1h’, ‘30m’).</p></td>
+</tr>
+<tr class="row-odd"><td><p>network.nodedid</p></td>
+<td></td>
+<td><p>Specifies the DID of the party that operates this node. It is used to identify the node on the network. If the DID document does not exist of is deactivated, the node will not start.</p></td>
+</tr>
+<tr class="row-even"><td><p>network.protocols</p></td>
+<td><p>[]</p></td>
+<td><p>Specifies the list of network protocols to enable on the server. They are specified by version (1, 2). If not set, all protocols are enabled.</p></td>
+</tr>
+<tr class="row-odd"><td><p>network.v2.diagnosticsinterval</p></td>
+<td><p>5000</p></td>
+<td><p>Interval (in milliseconds) that specifies how often the node should broadcast its diagnostic information to other nodes (specify 0 to disable).</p></td>
+</tr>
+<tr class="row-even"><td><p>network.v2.gossipinterval</p></td>
+<td><p>5000</p></td>
+<td><p>Interval (in milliseconds) that specifies how often the node should gossip its new hashes to other nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Storage</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>storage.bbolt.locktimeout</p></td>
+<td><p>1s</p></td>
+<td><p>Maximum time to wait for acquiring a lock on the BBolt database before giving up and returning an error. Formatted as Golang duration (e.g. 1s, 1m).</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.bbolt.backup.directory</p></td>
+<td></td>
+<td><p>Target directory for BBolt database backups.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.bbolt.backup.interval</p></td>
+<td><p>0s</p></td>
+<td><p>Interval, formatted as Golang duration (e.g. 10m, 1h) at which BBolt database backups will be performed.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.redis.address</p></td>
+<td></td>
+<td><p>Redis database server address. This can be a simple ‘host:port’ or a Redis connection URL with scheme, auth and other options.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.redis.database</p></td>
+<td></td>
+<td><p>Redis database name, which is used as prefix every key. Can be used to have multiple instances use the same Redis instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.redis.password</p></td>
+<td></td>
+<td><p>Redis database password. If set, it overrides the username in the connection URL.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.redis.username</p></td>
+<td></td>
+<td><p>Redis database username. If set, it overrides the username in the connection URL.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.redis.sentinel.master</p></td>
+<td></td>
+<td><p>Name of the Redis Sentinel master. Setting this property enables Redis Sentinel.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.redis.sentinel.nodes</p></td>
+<td><p>[]</p></td>
+<td><p>Addresses of the Redis Sentinels to connect to initially. Setting this property enables Redis Sentinel.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.redis.sentinel.password</p></td>
+<td></td>
+<td><p>Password for authenticating to Redis Sentinels.</p></td>
+</tr>
+<tr class="row-even"><td><p>storage.redis.sentinel.username</p></td>
+<td></td>
+<td><p>Username for authenticating to Redis Sentinels.</p></td>
+</tr>
+<tr class="row-odd"><td><p>storage.redis.tls.truststorefile</p></td>
+<td></td>
+<td><p>PEM file containing the trusted CA certificate(s) for authenticating remote Redis servers. Can only be used when connecting over TLS (use ‘rediss://’ as scheme in address).</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>VCR</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>vcr.openid4vci.definitionsdir</p></td>
+<td></td>
+<td><p>Directory with the additional credential definitions the node could issue (experimental, may change without notice).</p></td>
+</tr>
+<tr class="row-even"><td><p>vcr.openid4vci.enabled</p></td>
+<td><p>true</p></td>
+<td><p>Enable issuing and receiving credentials over OpenID4VCI.</p></td>
+</tr>
+<tr class="row-odd"><td><p>vcr.openid4vci.timeout</p></td>
+<td><p>30s</p></td>
+<td><p>Time-out for OpenID4VCI HTTP client operations.</p></td>
+</tr>
+</tbody>
+</table>
+<p>This table is automatically generated using the configuration flags in the core and engines. When they’re changed
+the options table must be regenerated using the Makefile:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>docs
+</pre></div>
+</div>
+</section>
+</section>
+<section id="secrets">
+<h2>Secrets<a class="headerlink" href="#secrets" title="Link to this heading"></a></h2>
+<p>All options ending with <code class="docutils literal notranslate"><span class="pre">token</span></code> or <code class="docutils literal notranslate"><span class="pre">password</span></code> are considered secrets and can only be set through environment variables or the config file.</p>
+</section>
+<section id="strict-mode">
+<h2>Strict mode<a class="headerlink" href="#strict-mode" title="Link to this heading"></a></h2>
+<p>Several of the server options above allow the node to be configured in a way that is unsafe for production environments, but are convenient for testing or development.
+The node can be configured to run in strict mode (default) to prevent any insecure configurations.
+Below is a summary of the impact <code class="docutils literal notranslate"><span class="pre">strictmode=true</span></code> has on the node and its configuration.</p>
+<p>Save storage of any private key material and data requires some serious consideration.
+For this reason the <code class="docutils literal notranslate"><span class="pre">crypto.storage</span></code> backend and the <code class="docutils literal notranslate"><span class="pre">storage.sql.connection</span></code> connection string must explicitly be set.</p>
+<p>Private transactions can only be exchanged over authenticated nodes.
+Therefore is requires TLS to be configured through <code class="docutils literal notranslate"><span class="pre">tls.{certfile,certkeyfile,truststore}</span></code>.
+To verify that authentication is correctly configured on your node, check the <code class="docutils literal notranslate"><span class="pre">network.auth_config</span></code> status on the <code class="docutils literal notranslate"><span class="pre">/health</span></code> endpoint.
+See <a class="reference internal" href="monitoring.html#nuts-node-monitoring"><span class="std std-ref">Monitoring</span></a> for more details.</p>
+<p>The incorporated <a class="reference external" href="https://irma.app/docs/irma-server/#production-mode">IRMA server</a> is automatically changed to production mode.
+In fact, running in strict mode is the only way to enable IRMA’s production mode.
+In addition, it requires <code class="docutils literal notranslate"><span class="pre">auth.irma.schememanager=pbdf</span></code>.</p>
+<p>As a general safety precaution <code class="docutils literal notranslate"><span class="pre">auth.contractvalidators</span></code> ignores the <code class="docutils literal notranslate"><span class="pre">dummy</span></code> option if configured,
+requesting an access token from another node on <code class="docutils literal notranslate"><span class="pre">/n2n/auth/v1/accesstoken</span></code> does not return any error details,
+<code class="docutils literal notranslate"><span class="pre">auth.accesstokenlifespan</span></code> is always 60 seconds,
+json-ld context can only be downloaded from trusted domains configured in <code class="docutils literal notranslate"><span class="pre">jsonld.contexts.remoteallowlist</span></code>,
+<code class="docutils literal notranslate"><span class="pre">http.log=metadata-and-body</span></code> is not allowed and is changed to <code class="docutils literal notranslate"><span class="pre">metadata</span></code> at startup (request and response bodies on the OAuth endpoints contain credentials, which must not be written to logs),
+and the <code class="docutils literal notranslate"><span class="pre">internalratelimiter</span></code> is always on.</p>
+<p>Interacting with remote Nuts nodes requires HTTPS: it will refuse to connect to plain HTTP endpoints when in strict mode.
+Strict mode additionally rejects outbound URLs whose host is an RFC 2606 reserved hostname/TLD (e.g. <code class="docutils literal notranslate"><span class="pre">*.localhost</span></code>, <code class="docutils literal notranslate"><span class="pre">*.test</span></code>, <code class="docutils literal notranslate"><span class="pre">example.com/net/org</span></code>); non-public IP addresses are refused too, unless explicitly permitted via <code class="docutils literal notranslate"><span class="pre">http.client.allowedinternalcidrs</span></code>.
+This applies to every outbound HTTP call made via the shared HTTP client (OpenID4VCI, OAuth relying-party, IAM, Discovery, did:web resolution, etc.) and to every redirect target along the way.</p>
+</section>
+<section id="registering-node-http-services-baseurl">
+<span id="node-http-services-baseurl"></span><h2>Registering <code class="docutils literal notranslate"><span class="pre">node-http-services-baseurl</span></code><a class="headerlink" href="#registering-node-http-services-baseurl" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DIDs receive private Verifiable Credentials via server-to-server issuance: the issuer’s node pushes the credential directly to the holder’s node over HTTP, at issuance time.
+If a node can’t be reached for server-to-server issuance, delivery falls back to the older gRPC/Nuts network instead: it publishes a transaction (with the recipient list encrypted) referencing the credential to the whole network, and the holder fetches the actual credential separately over an authenticated connection - a mechanism we’re moving away from in favor of server-to-server issuance.
+For a node to be reachable for server-to-server issuance (as issuer or holder), its <code class="docutils literal notranslate"><span class="pre">did:nuts</span></code> DID document needs a <code class="docutils literal notranslate"><span class="pre">node-http-services-baseurl</span></code> service endpoint, pointing other nodes at the public base URL where its HTTP services (including server-to-server issuance, and other <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> endpoints) can be reached.
+Without this DID Document service endpoint, its server-to-server issuance endpoints can’t be discovered, triggering the gRPC fallback described above (or an outright failure if that’s disabled too).
+Given <code class="docutils literal notranslate"><span class="pre">&lt;base-url&gt;</span></code> and a DID, the endpoints it needs to be reachable at are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;base-url&gt;/n2n/identity/&lt;did&gt;/.well-known/openid-credential-issuer</span></code> - credential issuer metadata</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;base-url&gt;/n2n/identity/&lt;did&gt;/.well-known/oauth-authorization-server</span></code> - OAuth/provider metadata</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;base-url&gt;/n2n/identity/&lt;did&gt;/openid4vci/credential</span></code> - credential endpoint (issuer side)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;base-url&gt;/n2n/identity/&lt;did&gt;/openid4vci/credential_offer</span></code> - credential offer endpoint (wallet/holder side)</p></li>
+</ul>
+<p>This isn’t an exhaustive list to configure individually: any reverse proxy or firewall in front of the node must forward the entire <code class="docutils literal notranslate"><span class="pre">/n2n</span></code> path prefix to it, not just these specific paths.</p>
+<p>The DID Document service endpoint is added automatically when possible, to ease configuration: a background module, GoldenHammer, tests each hostname in the node’s own TLS certificate with a <code class="docutils literal notranslate"><span class="pre">HEAD</span></code> request to <code class="docutils literal notranslate"><span class="pre">https://&lt;hostname&gt;/n2n/identity/&lt;did&gt;/.well-known/openid-credential-issuer</span></code>, and registers the first hostname that responds with <code class="docutils literal notranslate"><span class="pre">200</span> <span class="pre">OK</span></code> and <code class="docutils literal notranslate"><span class="pre">Content-Type:</span> <span class="pre">application/json</span></code>.
+This can fail if the node can’t reach itself that way - DNS, firewall, and reverse-proxy routing are the usual suspects - in which case the endpoint stays missing.</p>
+<p>You can also register the service endpoint manually via the DIDMan API, e.g. to have it in place immediately after setup rather than waiting for the next automatic check, or as a fallback if a subject DID’s vendor reference can’t be resolved automatically for any reason:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://internal.example.com/internal/didman/v1/did/&lt;did&gt;/endpoint<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"type": "node-http-services-baseurl", "endpoint": "https://your-node.example.com"}'</span>
+</pre></div>
+</div>
+<p>For a vendor DID document (the one whose <code class="docutils literal notranslate"><span class="pre">NutsComm</span></code> service is a concrete URL, e.g. <code class="docutils literal notranslate"><span class="pre">grpc://host:5555</span></code>), register the node’s actual public base URL as the <code class="docutils literal notranslate"><span class="pre">endpoint</span></code> value, as above.</p>
+<p>Any care-organization/subject DID document whose <code class="docutils literal notranslate"><span class="pre">NutsComm</span></code> service is instead a <em>reference</em> to that vendor DID should get a matching reference for <code class="docutils literal notranslate"><span class="pre">node-http-services-baseurl</span></code>, rather than a duplicate concrete URL, so all subject DIDs of the same vendor stay in sync with a single registration:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://internal.example.com/internal/didman/v1/did/&lt;subject-did&gt;/endpoint<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span><span class="s1">'{"type": "node-http-services-baseurl", "endpoint": "&lt;vendor-did&gt;/serviceEndpoint?type=node-http-services-baseurl"}'</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="domain.html" class="btn btn-neutral float-left" title="Choosing a domain name" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="migration.html" class="btn btn-neutral float-right" title="Migrating from v5 to v6" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

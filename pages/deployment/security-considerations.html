@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Considerations &mdash; Nuts Node  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/style.css?v=7df66933" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Decentralized identifiers" href="../technology/did.html" />
+    <link rel="prev" title="OAuth2 Profile" href="oauth.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Nuts Node
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Integrating:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/api-authentication.html">API Authentication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/vc.html">Issuing and searching Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/supported-protocols-formats.html">Supported Protocols and Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrating/version-incompatibilities.html">Version Incompatibilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Deployment &amp; Configuration:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Choosing a domain name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating from v5 to v6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommended-deployment.html">Recommended Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="certificates.html">Certificates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Running on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage.html">Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verifiable-credentials.html">Verifiable Credentials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="monitoring.html">Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli-reference.html">Server CLI Command Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discovery.html">Discovery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="policy.html">Access Token Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="key-rotation.html">Key rotation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audit-logging.html">Audit Logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth2 Profile</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Security Considerations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#endpoint-security">Endpoint Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#outbound-http-and-ssrf-protection">Outbound HTTP and SSRF protection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#allowing-internal-ranges">Allowing internal ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blocking-additional-ranges">Blocking additional ranges</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#d-d-os-protection">D(D)oS Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maximum-client-body-size-for-public-facing-post-apis">Maximum client body size for public-facing POST APIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-rotation">Key rotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-did-web">Using did:web</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Technology:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../technology/did.html">Decentralized identifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/jsonld.html">JSON-LD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/saas.html">SaaS Considerations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technology/security_model.html">Security Model</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../development/1-development.html">Nuts node development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/2-releasing.html">Releasing Nuts Node</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/3-api.html">API development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/4-vault.html">Development with Vault</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Nuts Node</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Security Considerations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/pages/deployment/security-considerations.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="security-considerations">
+<span id="id1"></span><h1>Security Considerations<a class="headerlink" href="#security-considerations" title="Link to this heading"></a></h1>
+<p>Please consult the topics below for various security considerations.</p>
+<section id="endpoint-security">
+<h2>Endpoint Security<a class="headerlink" href="#endpoint-security" title="Link to this heading"></a></h2>
+<p>It’s important to prevent outside access to the internal API’s. By default these are available from <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8081</span></code> and are not protected with API security.
+When exposing the external APIs to your internal network, take the appropriate measures to secure the API’s (SSH, API security, etc).</p>
+<p>In addition to securing the internal APIs, it’s recommended to limit access to the public APIs using a reverse proxy.
+This will allow you to control access to the public APIs, do TLS termination and add additional security measures.
+Block any path that’s not used by the Nuts node.</p>
+</section>
+<section id="outbound-http-and-ssrf-protection">
+<span id="ssrf-protection"></span><h2>Outbound HTTP and SSRF protection<a class="headerlink" href="#outbound-http-and-ssrf-protection" title="Link to this heading"></a></h2>
+<p>The Nuts node fetches URLs supplied by other parties, for example DID documents, OAuth metadata and
+Discovery Service endpoints. An attacker could register a URL that resolves to an address inside your
+network and let the node request it on their behalf. This is known as Server-Side Request Forgery (SSRF).</p>
+<p>In strict mode the node refuses outbound HTTP connections to non-public addresses: loopback,
+private (RFC 1918), carrier-grade NAT, link-local, unique local, and the other special-purpose ranges
+published in the IANA
+<a class="reference external" href="https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml">IPv4</a> and
+<a class="reference external" href="https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml">IPv6</a>
+special-purpose address registries. The check runs at connect time against the resolved IP address, so it
+also covers redirects and cannot be bypassed with DNS rebinding. Cloud provider metadata endpoints (such as
+<code class="docutils literal notranslate"><span class="pre">169.254.169.254</span></code> and Azure’s <code class="docutils literal notranslate"><span class="pre">168.63.129.16</span></code>) are always blocked, following the
+<a class="reference external" href="https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html">OWASP SSRF prevention cheat sheet</a>.
+Redirects that downgrade from HTTPS to HTTP are refused as well.</p>
+<p>A blocked request fails with an error like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strictmode</span><span class="p">:</span> <span class="n">blocked</span> <span class="n">connection</span> <span class="n">to</span> <span class="n">non</span><span class="o">-</span><span class="n">public</span> <span class="n">address</span> <span class="mf">10.0.0.5</span>
+</pre></div>
+</div>
+<section id="allowing-internal-ranges">
+<h3>Allowing internal ranges<a class="headerlink" href="#allowing-internal-ranges" title="Link to this heading"></a></h3>
+<p>If a legitimate flow targets a private address, for example an internal OpenID4VCI issuer or an OAuth
+flow that stays inside your network, then permit that range with <code class="docutils literal notranslate"><span class="pre">http.client.allowedinternalcidrs</span></code>.
+If part of an allowed range must stay unreachable, then deny that part with <code class="docutils literal notranslate"><span class="pre">http.client.deniedcidrs</span></code>;
+denied ranges take precedence:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">http</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">client</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">allowedinternalcidrs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.0.0.0/8</span>
+<span class="w">    </span><span class="nt">deniedcidrs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.5.0.0/16</span>
+</pre></div>
+</div>
+<p>Keep allowed ranges as narrow as possible. Every address in an allowed range becomes reachable for any
+URL an external party can make the node fetch.</p>
+</section>
+<section id="blocking-additional-ranges">
+<h3>Blocking additional ranges<a class="headerlink" href="#blocking-additional-ranges" title="Link to this heading"></a></h3>
+<p>Some networks use publicly routable addresses for internal-only systems. Public addresses are not
+covered by the built-in guard, so add such ranges to <code class="docutils literal notranslate"><span class="pre">http.client.deniedcidrs</span></code> explicitly.</p>
+<p>The built-in blocks for cloud metadata endpoints cannot be lifted with <code class="docutils literal notranslate"><span class="pre">allowedinternalcidrs</span></code>.
+Both options only apply in strict mode; without strict mode the SSRF guard is disabled.</p>
+</section>
+</section>
+<section id="d-d-os-protection">
+<h2>D(D)oS Protection<a class="headerlink" href="#d-d-os-protection" title="Link to this heading"></a></h2>
+<p>Consider implementing (D)DoS protection on the application layer for all public endpoints.
+Monitor and log the following metrics:</p>
+<ul class="simple">
+<li><p>Number of requests per second</p></li>
+<li><p>Number of requests from a single IP address</p></li>
+<li><p>Amount of non-20x responses</p></li>
+</ul>
+<p>Any outliers should be investigated.</p>
+</section>
+<section id="maximum-client-body-size-for-public-facing-post-apis">
+<h2>Maximum client body size for public-facing POST APIs<a class="headerlink" href="#maximum-client-body-size-for-public-facing-post-apis" title="Link to this heading"></a></h2>
+<p>Various parts of the Nuts Node API allow for POST requests. To prevent abuse, you should limit the size of the request body.
+The following public APIs accept POST requests:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/discovery/{service}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/oauth2/{subjectID}/token</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/oauth2/{subjectID}/request.jwt/{id}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/oauth2/{subjectID}/response</span></code></p></li>
+</ul>
+<p>To prevent malicious uploads, you MUST limit the size of the requests.
+As a safeguard, the Nuts node also limits the size of request bodies to 1MB, on both the public and internal API endpoints, responding with HTTP 413 (Request Entity Too Large) when a request exceeds it.</p>
+<p>For example, Nginx has a configuration directive to limit the size of the request body:</p>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">client_max_body_size</span><span class="w"> </span><span class="s">1M</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The actual limit depends on your use case. It should be large enough for Verifiable Presentations to be uploaded, but small enough to prevent abuse.</p>
+</section>
+<section id="key-rotation">
+<h2>Key rotation<a class="headerlink" href="#key-rotation" title="Link to this heading"></a></h2>
+<p>It’s important to have a key rotation policy in place. The Nuts node uses keys for various signing operations.
+These operations are numerous and therefore keys should be rotated regularly.</p>
+</section>
+<section id="using-did-web">
+<h2>Using did:web<a class="headerlink" href="#using-did-web" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">did:web</span></code> method allows for easier integration with existing web infrastructure. However, it’s also less secure and vulnerable to domain takeover.
+When using <code class="docutils literal notranslate"><span class="pre">did:web</span></code>, you should consider the following:</p>
+<ul class="simple">
+<li><p>Protect your domain from takeover. Make sure it’s locked for a year after cancelling the domain.</p></li>
+<li><p>Monitor calls to <code class="docutils literal notranslate"><span class="pre">**/did.json</span></code> on the domain and make sure they are handled by the Nuts Node.</p></li>
+<li><p>Using Hashicorp Vault or Microsoft Azure Key Vault to store the private keys is even more important when using <code class="docutils literal notranslate"><span class="pre">did:web</span></code>.</p></li>
+<li><p>Use DNS over HTTPS and enable DNSSEC.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="oauth.html" class="btn btn-neutral float-left" title="OAuth2 Profile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../technology/did.html" class="btn btn-neutral float-right" title="Decentralized identifiers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Nuts community.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
